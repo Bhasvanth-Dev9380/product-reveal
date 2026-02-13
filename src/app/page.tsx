@@ -686,7 +686,7 @@ export default function ProductShowcase() {
             {activeTab === "agents" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc product-desc--compact">
-                  <p className="product-subtitle">Build a team of AI agents that join standups, discuss tasks, and execute work — with you always in the loop</p>
+                  <p className="product-subtitle">Text from any app, your AI crew joins meetings, solves problems, and gets work done — so you can focus on what matters</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
