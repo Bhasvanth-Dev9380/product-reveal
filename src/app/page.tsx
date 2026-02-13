@@ -387,8 +387,7 @@ export default function ProductShowcase() {
             {/* ── Agents Tab Panel ── */}
             {activeTab === "agents" && (
               <div className="tab-panel-contents" role="tabpanel">
-                <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">AI Crew</p>
+                <div className="product-desc product-desc--compact">
                   <p className="product-subtitle">Build a team of AI agents that join standups, discuss tasks, and execute work — with you always in the loop</p>
                 </div>
 
@@ -426,19 +425,7 @@ export default function ProductShowcase() {
                             <div className="mt-video-bg" />
                             {/* Current speaker badge */}
                             <div className="mt-you-badge"><span className="mt-you-avatar">A</span> Ava – Scrum Master</div>
-                            {/* Recording indicator */}
-                            <div className="mt-recording">
-                              <span className="mt-rec-dot" />
-                              Recording in Progress....
-                              <div className="mt-layout-btns">
-                                <button className="mt-layout-btn" aria-label="Grid layout">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
-                                </button>
-                                <button className="mt-layout-btn" aria-label="Stack layout">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></svg>
-                                </button>
-                              </div>
-                            </div>
+                          
                             {/* Center: large agent avatar */}
                             <div className="mt-main-agent-avatar">
                               <img src="/crew/1.png" alt="Ava" className="mt-main-agent-img" />
@@ -511,9 +498,6 @@ export default function ProductShowcase() {
                             <div className="mt-info-card">
                               <div className="mt-info-card-title">Summary</div>
                               <p className="mt-info-card-text">Discussed Q2 sprint priorities. Auth module PR is ready. Payment integration pushed to Wednesday. Error monitoring added as new task.</p>
-                              <button className="mt-info-edit" aria-label="Edit">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                              </button>
                             </div>
                             <div className="mt-info-card">
                               <div className="mt-info-card-title">Tasks List</div>
@@ -548,21 +532,21 @@ export default function ProductShowcase() {
                                 <span className="mt-chat-sender">Ava (Scrum Master)</span>
                                 <span className="mt-chat-time">9:01 AM</span>
                               </div>
-                              <p className="mt-chat-text">Max, what&apos;s the status on the auth module?</p>
+                              <p className="mt-chat-text">How about our problem last week?</p>
                             </div>
                             <div className="mt-chat-bubble mt-chat-bubble--you">
                               <div className="mt-chat-bubble-head">
                                 <span className="mt-chat-sender">You</span>
                                 <span className="mt-chat-time">9:03 AM</span>
                               </div>
-                              <p className="mt-chat-text">Add error monitoring before we ship. Leo, assign that.</p>
+                              <p className="mt-chat-text">It&apos;s all clear, no worries 😄</p>
                             </div>
                             <div className="mt-chat-bubble">
                               <div className="mt-chat-bubble-head">
                                 <span className="mt-chat-sender">Leo (Tech Lead)</span>
                                 <span className="mt-chat-time">9:04 AM</span>
                               </div>
-                              <p className="mt-chat-text">On it! I&apos;ll set up Sentry + Grafana dashboards by EOD. Tasks synced to your calendar 📅</p>
+                              <p className="mt-chat-text">Yes, it&apos;s been solved. Since we have daily meeting to discuss everything 😊</p>
                             </div>
                           </div>
 
