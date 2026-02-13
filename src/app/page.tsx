@@ -251,11 +251,10 @@ export default function ProductShowcase() {
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const [orbAgentState, setOrbAgentState] = useState<"thinking" | "listening" | "talking" | null>(null);
 
-  /* ── Voice Cloning state ── */
+  /* ── Voice Cloning state (unified timeline, pre-loaded audio) ── */
   const [clonePlayingOriginal, setClonePlayingOriginal] = useState(false);
   const [clonePlayingClone, setClonePlayingClone] = useState(false);
-  const [cloneOriginalTime, setCloneOriginalTime] = useState(0);
-  const [cloneCloneTime, setCloneCloneTime] = useState(0);
+  const [cloneSharedTime, setCloneSharedTime] = useState(0);
   const [cloneOriginalDuration, setCloneOriginalDuration] = useState(10);
   const [cloneCloneDuration, setCloneCloneDuration] = useState(10);
   const cloneOriginalAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -264,13 +263,34 @@ export default function ProductShowcase() {
 
   const activeCloneDemo = CLONE_DEMO;
 
-  /* sync time display */
+  /* Pre-load both audio files once on mount */
+  useEffect(() => {
+    const origAudio = new Audio(activeCloneDemo.originalAudio);
+    const cloneAudio = new Audio(activeCloneDemo.cloneAudio);
+    origAudio.preload = "auto";
+    cloneAudio.preload = "auto";
+    origAudio.onloadedmetadata = () => setCloneOriginalDuration(origAudio.duration);
+    cloneAudio.onloadedmetadata = () => setCloneCloneDuration(cloneAudio.duration);
+    origAudio.onended = () => { setClonePlayingOriginal(false); };
+    cloneAudio.onended = () => { setClonePlayingClone(false); };
+    cloneOriginalAudioRef.current = origAudio;
+    cloneCloneAudioRef.current = cloneAudio;
+    return () => {
+      origAudio.pause();
+      cloneAudio.pause();
+      origAudio.src = "";
+      cloneAudio.src = "";
+    };
+  }, [activeCloneDemo]);
+
+  /* Single tick — whichever audio is playing drives the shared time */
   const tickCloneTimers = useCallback(() => {
-    if (cloneOriginalAudioRef.current && !cloneOriginalAudioRef.current.paused) {
-      setCloneOriginalTime(cloneOriginalAudioRef.current.currentTime);
-    }
-    if (cloneCloneAudioRef.current && !cloneCloneAudioRef.current.paused) {
-      setCloneCloneTime(cloneCloneAudioRef.current.currentTime);
+    const origAudio = cloneOriginalAudioRef.current;
+    const cloneAudio = cloneCloneAudioRef.current;
+    if (origAudio && !origAudio.paused) {
+      setCloneSharedTime(origAudio.currentTime);
+    } else if (cloneAudio && !cloneAudio.paused) {
+      setCloneSharedTime(cloneAudio.currentTime);
     }
     cloneTimerRef.current = requestAnimationFrame(tickCloneTimers);
   }, []);
@@ -282,75 +302,80 @@ export default function ProductShowcase() {
     };
   }, [tickCloneTimers]);
 
-  /* stop both clone audios */
-  const stopCloneAudios = useCallback(() => {
-    if (cloneOriginalAudioRef.current) {
-      cloneOriginalAudioRef.current.pause();
-      cloneOriginalAudioRef.current.currentTime = 0;
-    }
-    if (cloneCloneAudioRef.current) {
-      cloneCloneAudioRef.current.pause();
-      cloneCloneAudioRef.current.currentTime = 0;
-    }
-    setClonePlayingOriginal(false);
-    setClonePlayingClone(false);
-    setCloneOriginalTime(0);
-    setCloneCloneTime(0);
-  }, []);
-
-  /* play original → then auto-play clone from same position */
+  /* play original — pauses clone, starts original from same position */
   const handlePlayOriginal = useCallback(() => {
+    const origAudio = cloneOriginalAudioRef.current;
+    const cloneAudio = cloneCloneAudioRef.current;
+    if (!origAudio) return;
+
     if (clonePlayingOriginal) {
-      cloneOriginalAudioRef.current?.pause();
+      origAudio.pause();
       setClonePlayingOriginal(false);
       return;
     }
-    stopCloneAudios();
-    const audio = new Audio(activeCloneDemo.originalAudio);
-    cloneOriginalAudioRef.current = audio;
-    audio.onloadedmetadata = () => setCloneOriginalDuration(audio.duration);
-    audio.onended = () => {
-      setClonePlayingOriginal(false);
-      // auto-start clone from same position
-      const cloneAudio = new Audio(activeCloneDemo.cloneAudio);
-      cloneCloneAudioRef.current = cloneAudio;
-      cloneAudio.onloadedmetadata = () => setCloneCloneDuration(cloneAudio.duration);
-      cloneAudio.onended = () => setClonePlayingClone(false);
-      setClonePlayingClone(true);
-      cloneAudio.play();
-    };
-    setClonePlayingOriginal(true);
-    audio.play();
-  }, [clonePlayingOriginal, activeCloneDemo, stopCloneAudios]);
 
-  /* play clone independently */
+    // Sync position from whichever was playing, or current shared time
+    const syncTime = (cloneAudio && !cloneAudio.paused)
+      ? cloneAudio.currentTime : cloneSharedTime;
+
+    // Pause clone if it was playing
+    if (cloneAudio && !cloneAudio.paused) {
+      cloneAudio.pause();
+    }
+    setClonePlayingClone(false);
+
+    // Start original from synced position
+    origAudio.currentTime = Math.min(syncTime, origAudio.duration || Infinity);
+    setClonePlayingOriginal(true);
+    origAudio.play();
+  }, [clonePlayingOriginal, cloneSharedTime]);
+
+  /* play clone — pauses original, starts clone from same position */
   const handlePlayClone = useCallback(() => {
+    const origAudio = cloneOriginalAudioRef.current;
+    const cloneAudio = cloneCloneAudioRef.current;
+    if (!cloneAudio) return;
+
     if (clonePlayingClone) {
-      cloneCloneAudioRef.current?.pause();
+      cloneAudio.pause();
       setClonePlayingClone(false);
       return;
     }
-    stopCloneAudios();
-    const audio = new Audio(activeCloneDemo.cloneAudio);
-    cloneCloneAudioRef.current = audio;
-    audio.onloadedmetadata = () => setCloneCloneDuration(audio.duration);
-    audio.onended = () => setClonePlayingClone(false);
-    setClonePlayingClone(true);
-    audio.play();
-  }, [clonePlayingClone, activeCloneDemo, stopCloneAudios]);
 
-  /* seek on scrubber */
+    // Sync position from whichever was playing, or current shared time
+    const syncTime = (origAudio && !origAudio.paused)
+      ? origAudio.currentTime : cloneSharedTime;
+
+    // Pause original if it was playing
+    if (origAudio && !origAudio.paused) {
+      origAudio.pause();
+    }
+    setClonePlayingOriginal(false);
+
+    // Start clone from synced position
+    cloneAudio.currentTime = Math.min(syncTime, cloneAudio.duration || Infinity);
+    setClonePlayingClone(true);
+    cloneAudio.play();
+  }, [clonePlayingClone, cloneSharedTime]);
+
+  /* seek on either scrubber — updates shared time + both audio elements */
   const handleSeekOriginal = useCallback((time: number) => {
+    setCloneSharedTime(time);
     if (cloneOriginalAudioRef.current) {
       cloneOriginalAudioRef.current.currentTime = time;
-      setCloneOriginalTime(time);
+    }
+    if (cloneCloneAudioRef.current) {
+      cloneCloneAudioRef.current.currentTime = Math.min(time, cloneCloneAudioRef.current.duration || Infinity);
     }
   }, []);
 
   const handleSeekClone = useCallback((time: number) => {
+    setCloneSharedTime(time);
     if (cloneCloneAudioRef.current) {
       cloneCloneAudioRef.current.currentTime = time;
-      setCloneCloneTime(time);
+    }
+    if (cloneOriginalAudioRef.current) {
+      cloneOriginalAudioRef.current.currentTime = Math.min(time, cloneOriginalAudioRef.current.duration || Infinity);
     }
   }, []);
 
@@ -1147,7 +1172,7 @@ export default function ProductShowcase() {
                         <div className="vc-waveform-wrap">
                           <AudioScrubber
                             data={activeCloneDemo.originalWaveform}
-                            currentTime={cloneOriginalTime}
+                            currentTime={cloneSharedTime}
                             duration={cloneOriginalDuration}
                             onSeek={handleSeekOriginal}
                             height={56}
@@ -1178,7 +1203,7 @@ export default function ProductShowcase() {
                             )}
                           </button>
                           <span className="vc-time">
-                            {formatTime(cloneOriginalTime)} / {formatTime(cloneOriginalDuration)}
+                            {formatTime(cloneSharedTime)} / {formatTime(cloneOriginalDuration)}
                           </span>
                         </div>
                       </div>
@@ -1218,7 +1243,7 @@ export default function ProductShowcase() {
                         <div className="vc-waveform-wrap">
                           <AudioScrubber
                             data={activeCloneDemo.cloneWaveform}
-                            currentTime={cloneCloneTime}
+                            currentTime={cloneSharedTime}
                             duration={cloneCloneDuration}
                             onSeek={handleSeekClone}
                             height={56}
@@ -1249,7 +1274,7 @@ export default function ProductShowcase() {
                             )}
                           </button>
                           <span className="vc-time vc-time--light">
-                            {formatTime(cloneCloneTime)} / {formatTime(cloneCloneDuration)}
+                            {formatTime(cloneSharedTime)} / {formatTime(cloneCloneDuration)}
                           </span>
                         </div>
                       </div>
