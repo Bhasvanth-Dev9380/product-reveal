@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Orb } from "@/components/ui/orb";
+import { AudioScrubber, ScrollingWaveform } from "@/components/ui/waveform";
 import "./product-showcase.css";
 
 const TAB_DURATION = 5000; // ms per tab
@@ -10,42 +11,66 @@ const TAB_DURATION = 5000; // ms per tab
 const PROMPT_EXAMPLES = [
   {
     label: "Lead qualification",
-    prompt: "Create an AI workflow that qualifies inbound leads by analyzing company size, industry, and budget, then updates HubSpot and schedules meetings with qualified prospects",
+    prompt: "Create an AI agent that qualifies inbound leads by analyzing their company size, industry, and budget, then automatically updates Salesforce and schedules meetings with qualified prospects",
   },
   {
-    label: "Email outreach",
-    prompt: "Build an automated email sequence that sends personalized outreach via SendGrid, tracks opens and clicks, and automatically follows up with engaged recipients",
+    label: "Customer support",
+    prompt: "Build a 24/7 AI support agent that handles common customer inquiries, pulls data from our knowledge base, creates tickets in Zendesk for complex issues, and escalates urgent matters to human agents",
   },
   {
-    label: "CRM automation",
-    prompt: "Set up an intelligent pipeline that syncs lead data across Google Forms, Gemini AI scoring, and HubSpot CRM, with automated deal creation and task assignment",
+    label: "Outbound sales calls",
+    prompt: "Deploy an AI voice agent that makes personalized outbound sales calls, qualifies prospects based on their responses, handles objections, and books demos with interested leads automatically",
+  },
+  {
+    label: "Email campaigns",
+    prompt: "Set up an AI agent that monitors customer behavior, sends personalized email campaigns through HubSpot, tracks engagement metrics, and automatically follows up with interested recipients",
+  },
+  {
+    label: "Content generator",
+    prompt: "Create an AI agent that generates blog posts, social media content, and email copy based on our brand voice, automatically publishes to our CMS, and optimizes content based on engagement analytics",
   },
 ];
 
 const TRANSLATIONS: Record<string, string[]> = {
   [PROMPT_EXAMPLES[0].prompt]: [
-    "Create an AI workflow that qualifies inbound leads by analyzing company size, industry, and budget, then updates HubSpot and schedules meetings with qualified prospects",
-    "(ES) Crear un flujo de IA que califique leads entrantes analizando tamaño de empresa, industria y presupuesto, luego actualice HubSpot y programe reuniones",
-    "(FR) Créer un workflow IA qui qualifie les prospects entrants en analysant la taille de l'entreprise, le secteur et le budget, puis met à jour HubSpot",
-    "(DE) Erstellen Sie einen KI-Workflow, der eingehende Leads nach Unternehmensgröße, Branche und Budget qualifiziert und HubSpot aktualisiert",
-    "(JP) 企業規模・業種・予算を分析してインバウンドリードを選別し、HubSpotを更新して商談を設定するAIワークフローを作成",
-    "(ZH) 创建AI工作流，通过分析公司规模、行业和预算来筛选潜在客户，然后更新HubSpot并安排会议",
+    "Create an AI agent that qualifies inbound leads by analyzing their company size, industry, and budget, then automatically updates Salesforce and schedules meetings with qualified prospects",
+    "(ES) Crear un agente de IA que califique clientes potenciales entrantes analizando tamaño de empresa, industria y presupuesto, luego actualice Salesforce y programe reuniones",
+    "(FR) Créer un agent IA qui qualifie les prospects entrants en analysant la taille de l'entreprise, le secteur et le budget, puis met à jour Salesforce et planifie des réunions",
+    "(DE) Erstellen Sie einen KI-Agenten, der eingehende Leads nach Unternehmensgröße, Branche und Budget qualifiziert, Salesforce aktualisiert und Meetings plant",
+    "(JP) 企業規模・業種・予算を分析してインバウンドリードを選別し、Salesforceを更新して商談を設定するAIエージェントを作成",
+    "(ZH) 创建一个AI代理，通过分析公司规模、行业和预算来筛选潜在客户，自动更新Salesforce并安排会议",
   ],
   [PROMPT_EXAMPLES[1].prompt]: [
-    "Build an automated email sequence that sends personalized outreach via SendGrid, tracks opens and clicks, and automatically follows up with engaged recipients",
-    "(ES) Construir una secuencia de correo automatizada que envíe alcance personalizado vía SendGrid, rastree aperturas y clics, y haga seguimiento automático",
-    "(FR) Construire une séquence d'emails automatisée qui envoie des messages personnalisés via SendGrid, suit les ouvertures et clics, et relance automatiquement",
-    "(DE) Erstellen Sie eine automatisierte E-Mail-Sequenz, die personalisierte Nachrichten über SendGrid sendet, Öffnungen und Klicks verfolgt und automatisch nachfasst",
-    "(JP) SendGrid経由でパーソナライズされたメールを送信し、開封とクリックを追跡し、関心のある受信者に自動フォローアップするシーケンスを構築",
-    "(ZH) 构建自动化邮件序列，通过SendGrid发送个性化外联邮件，追踪打开和点击，并自动跟进感兴趣的收件人",
+    "Build a 24/7 AI support agent that handles common customer inquiries, pulls data from our knowledge base, creates tickets in Zendesk for complex issues, and escalates urgent matters to human agents",
+    "(ES) Construir un agente de soporte IA 24/7 que maneje consultas comunes, extraiga datos de la base de conocimientos, cree tickets en Zendesk y escale asuntos urgentes",
+    "(FR) Construire un agent de support IA 24/7 qui gère les demandes courantes, consulte la base de connaissances, crée des tickets Zendesk et escalade les urgences",
+    "(DE) Erstellen Sie einen 24/7-KI-Support-Agenten, der häufige Anfragen bearbeitet, Daten aus der Wissensdatenbank abruft und dringende Fälle eskaliert",
+    "(JP) 24時間365日対応のAIサポートエージェントを構築し、一般的な問い合わせに対応、Zendeskでチケットを作成、緊急案件をエスカレーション",
+    "(ZH) 构建一个24/7 AI支持代理，处理常见客户咨询，从知识库提取数据，在Zendesk创建工单，并将紧急事项升级给人工客服",
   ],
   [PROMPT_EXAMPLES[2].prompt]: [
-    "Set up an intelligent pipeline that syncs lead data across Google Forms, Gemini AI scoring, and HubSpot CRM, with automated deal creation and task assignment",
-    "(ES) Configurar un pipeline inteligente que sincronice datos de leads entre Google Forms, puntuación de Gemini IA y HubSpot CRM, con creación automática de negocios",
-    "(FR) Configurer un pipeline intelligent qui synchronise les données de leads entre Google Forms, le scoring Gemini IA et HubSpot CRM, avec création automatique de deals",
-    "(DE) Richten Sie eine intelligente Pipeline ein, die Lead-Daten zwischen Google Forms, Gemini-KI-Scoring und HubSpot CRM synchronisiert, mit automatischer Deal-Erstellung",
-    "(JP) Google Forms、Gemini AIスコアリング、HubSpot CRM間でリードデータを同期し、案件の自動作成とタスク割り当てを行うパイプラインを構築",
-    "(ZH) 设置智能管道，在Google Forms、Gemini AI评分和HubSpot CRM之间同步潜在客户数据，自动创建交易和分配任务",
+    "Deploy an AI voice agent that makes personalized outbound sales calls, qualifies prospects based on their responses, handles objections, and books demos with interested leads automatically",
+    "(ES) Implementar un agente de voz IA que realice llamadas de ventas personalizadas, califique prospectos según sus respuestas, maneje objeciones y reserve demos automáticamente",
+    "(FR) Déployer un agent vocal IA qui effectue des appels de vente personnalisés, qualifie les prospects, gère les objections et réserve des démos automatiquement",
+    "(DE) Bereitstellen eines KI-Sprachagenten für personalisierte Verkaufsgespräche, der Interessenten qualifiziert, Einwände behandelt und automatisch Demos bucht",
+    "(JP) パーソナライズされた営業電話を行い、応答に基づいて見込み客を選別し、反論に対応し、デモを自動予約するAI音声エージェントを展開",
+    "(ZH) 部署AI语音代理进行个性化销售电话，根据回复筛选潜在客户，处理异议，并自动为感兴趣的客户预约演示",
+  ],
+  [PROMPT_EXAMPLES[3].prompt]: [
+    "Set up an AI agent that monitors customer behavior, sends personalized email campaigns through HubSpot, tracks engagement metrics, and automatically follows up with interested recipients",
+    "(ES) Configurar un agente IA que monitoree el comportamiento del cliente, envíe campañas de correo personalizadas a través de HubSpot y haga seguimiento automático",
+    "(FR) Configurer un agent IA qui surveille le comportement client, envoie des campagnes email personnalisées via HubSpot et relance automatiquement les destinataires intéressés",
+    "(DE) Richten Sie einen KI-Agenten ein, der das Kundenverhalten überwacht, personalisierte E-Mail-Kampagnen über HubSpot sendet und automatisch nachfasst",
+    "(JP) 顧客行動を監視し、HubSpot経由でパーソナライズされたメールキャンペーンを送信し、関心のある受信者に自動フォローアップするAIエージェントを設定",
+    "(ZH) 设置AI代理监控客户行为，通过HubSpot发送个性化邮件营销活动，跟踪参与度指标，并自动跟进感兴趣的收件人",
+  ],
+  [PROMPT_EXAMPLES[4].prompt]: [
+    "Create an AI agent that generates blog posts, social media content, and email copy based on our brand voice, automatically publishes to our CMS, and optimizes content based on engagement analytics",
+    "(ES) Crear un agente IA que genere publicaciones de blog, contenido de redes sociales y correos según nuestra voz de marca, publique automáticamente y optimice según analíticas",
+    "(FR) Créer un agent IA qui génère des articles de blog, du contenu social et des emails alignés sur notre marque, publie automatiquement et optimise selon l'engagement",
+    "(DE) Erstellen Sie einen KI-Agenten, der Blogbeiträge, Social-Media-Inhalte und E-Mail-Texte generiert, automatisch im CMS veröffentlicht und basierend auf Engagement optimiert",
+    "(JP) ブランドボイスに基づいてブログ記事、SNSコンテンツ、メールコピーを生成し、CMSに自動公開し、エンゲージメント分析に基づいて最適化するAIエージェントを作成",
+    "(ZH) 创建AI代理根据品牌调性生成博客文章、社交媒体内容和邮件文案，自动发布到CMS，并根据参与度分析优化内容",
   ],
 };
 
@@ -188,6 +213,36 @@ const BG_COLORS: Record<string, string> = {
   bg08: "#c4cfe8",
 };
 
+/* ─── Helpers ─── */
+const formatTime = (s: number) => {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, "0")}`;
+};
+
+/* ─── Waveform data (deterministic for each voice) ─── */
+const generateWaveformData = (seed: number, length: number) => {
+  const data: number[] = [];
+  for (let i = 0; i < length; i++) {
+    const x = Math.sin(seed + i * 0.7) * 10000;
+    const r = x - Math.floor(x);
+    const wave = Math.sin(i * 0.12 + seed) * 0.2 + Math.cos(i * 0.08 - seed) * 0.15;
+    data.push(Math.max(0.08, Math.min(0.95, 0.35 + wave + r * 0.3)));
+  }
+  return data;
+};
+
+const CLONE_DEMO = {
+  id: "zara",
+  name: "Zara",
+  desc: "Chill & Effortless",
+  originalAudio: "/audio/voices/alloy.wav",
+  cloneAudio: "/audio/voices/echo.wav",
+  originalWaveform: generateWaveformData(42, 120),
+  cloneWaveform: generateWaveformData(88, 120),
+  color: "#6366f1",
+};
+
 export default function ProductShowcase() {
   const [activeTabIdx, setActiveTabIdx] = useState(0);
   const [selectedVoice, setSelectedVoice] = useState(VOICES[0].id);
@@ -195,6 +250,109 @@ export default function ProductShowcase() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
   const [orbAgentState, setOrbAgentState] = useState<"thinking" | "listening" | "talking" | null>(null);
+
+  /* ── Voice Cloning state ── */
+  const [clonePlayingOriginal, setClonePlayingOriginal] = useState(false);
+  const [clonePlayingClone, setClonePlayingClone] = useState(false);
+  const [cloneOriginalTime, setCloneOriginalTime] = useState(0);
+  const [cloneCloneTime, setCloneCloneTime] = useState(0);
+  const [cloneOriginalDuration, setCloneOriginalDuration] = useState(10);
+  const [cloneCloneDuration, setCloneCloneDuration] = useState(10);
+  const cloneOriginalAudioRef = useRef<HTMLAudioElement | null>(null);
+  const cloneCloneAudioRef = useRef<HTMLAudioElement | null>(null);
+  const cloneTimerRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
+
+  const activeCloneDemo = CLONE_DEMO;
+
+  /* sync time display */
+  const tickCloneTimers = useCallback(() => {
+    if (cloneOriginalAudioRef.current && !cloneOriginalAudioRef.current.paused) {
+      setCloneOriginalTime(cloneOriginalAudioRef.current.currentTime);
+    }
+    if (cloneCloneAudioRef.current && !cloneCloneAudioRef.current.paused) {
+      setCloneCloneTime(cloneCloneAudioRef.current.currentTime);
+    }
+    cloneTimerRef.current = requestAnimationFrame(tickCloneTimers);
+  }, []);
+
+  useEffect(() => {
+    cloneTimerRef.current = requestAnimationFrame(tickCloneTimers);
+    return () => {
+      if (cloneTimerRef.current) cancelAnimationFrame(cloneTimerRef.current);
+    };
+  }, [tickCloneTimers]);
+
+  /* stop both clone audios */
+  const stopCloneAudios = useCallback(() => {
+    if (cloneOriginalAudioRef.current) {
+      cloneOriginalAudioRef.current.pause();
+      cloneOriginalAudioRef.current.currentTime = 0;
+    }
+    if (cloneCloneAudioRef.current) {
+      cloneCloneAudioRef.current.pause();
+      cloneCloneAudioRef.current.currentTime = 0;
+    }
+    setClonePlayingOriginal(false);
+    setClonePlayingClone(false);
+    setCloneOriginalTime(0);
+    setCloneCloneTime(0);
+  }, []);
+
+  /* play original → then auto-play clone from same position */
+  const handlePlayOriginal = useCallback(() => {
+    if (clonePlayingOriginal) {
+      cloneOriginalAudioRef.current?.pause();
+      setClonePlayingOriginal(false);
+      return;
+    }
+    stopCloneAudios();
+    const audio = new Audio(activeCloneDemo.originalAudio);
+    cloneOriginalAudioRef.current = audio;
+    audio.onloadedmetadata = () => setCloneOriginalDuration(audio.duration);
+    audio.onended = () => {
+      setClonePlayingOriginal(false);
+      // auto-start clone from same position
+      const cloneAudio = new Audio(activeCloneDemo.cloneAudio);
+      cloneCloneAudioRef.current = cloneAudio;
+      cloneAudio.onloadedmetadata = () => setCloneCloneDuration(cloneAudio.duration);
+      cloneAudio.onended = () => setClonePlayingClone(false);
+      setClonePlayingClone(true);
+      cloneAudio.play();
+    };
+    setClonePlayingOriginal(true);
+    audio.play();
+  }, [clonePlayingOriginal, activeCloneDemo, stopCloneAudios]);
+
+  /* play clone independently */
+  const handlePlayClone = useCallback(() => {
+    if (clonePlayingClone) {
+      cloneCloneAudioRef.current?.pause();
+      setClonePlayingClone(false);
+      return;
+    }
+    stopCloneAudios();
+    const audio = new Audio(activeCloneDemo.cloneAudio);
+    cloneCloneAudioRef.current = audio;
+    audio.onloadedmetadata = () => setCloneCloneDuration(audio.duration);
+    audio.onended = () => setClonePlayingClone(false);
+    setClonePlayingClone(true);
+    audio.play();
+  }, [clonePlayingClone, activeCloneDemo, stopCloneAudios]);
+
+  /* seek on scrubber */
+  const handleSeekOriginal = useCallback((time: number) => {
+    if (cloneOriginalAudioRef.current) {
+      cloneOriginalAudioRef.current.currentTime = time;
+      setCloneOriginalTime(time);
+    }
+  }, []);
+
+  const handleSeekClone = useCallback((time: number) => {
+    if (cloneCloneAudioRef.current) {
+      cloneCloneAudioRef.current.currentTime = time;
+      setCloneCloneTime(time);
+    }
+  }, []);
 
   const handlePreview = (voiceId: string, audioSrc: string) => {
     if (playingVoice === voiceId && audioRef.current) {
@@ -690,7 +848,16 @@ export default function ProductShowcase() {
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
                   <p className="product-title" aria-hidden="true">Workflows</p>
-                  <p className="product-subtitle">Turn inbound leads into closed deals — automatically</p>
+                  <p className="product-subtitle">Automate any business process with AI — describe it, deploy it</p>
+                  <div className="wf-stats-bar">
+                    <span className="wf-stat"><strong>200+</strong> Integrations</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>8,000+</strong> Templates</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>30+</strong> Languages</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>50K+</strong> Community Templates</span>
+                  </div>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
@@ -790,6 +957,15 @@ export default function ProductShowcase() {
                 <div className="product-desc">
                   <p className="product-title" aria-hidden="true">Chatbot Builder</p>
                   <p className="product-subtitle">Your customers shouldn&apos;t wait hours for a simple answer</p>
+                  <div className="wf-stats-bar">
+                    <span className="wf-stat"><strong>AI</strong> Avatars</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>200+</strong> Tool Integrations</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>30+</strong> Languages</span>
+                    <span className="wf-stat-dot" />
+                    <span className="wf-stat"><strong>No-code</strong> Builder</span>
+                  </div>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
@@ -842,6 +1018,23 @@ export default function ProductShowcase() {
                               </span>
                               <span className="cb-card-metric cb-card-metric--green">24/7 instant support</span>
                             </div>
+                          </div>
+                        </div>
+
+                        {/* Integration logo cluster */}
+                        <div className="cb-integrations">
+                          <span className="cb-integrations-label">Connects with</span>
+                          <div className="cb-logo-cluster">
+                            <span className="cb-logo-pill"><img src="/logos/clover.svg" alt="Clover" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/ms-dynamics-crm.png" alt="Dynamics CRM" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/mcp-client-black.png" alt="MCP" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/zendesk.svg" alt="Zendesk" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/intercom.svg" alt="Intercom" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/shopify.svg" alt="Shopify" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/salesforce.png" alt="Salesforce" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/hubspot.svg" alt="HubSpot" width="16" height="16" /></span>
+                            <span className="cb-logo-pill"><img src="/logos/stripe.svg" alt="Stripe" width="16" height="16" /></span>
+                            <span className="cb-logo-pill cb-logo-pill--more">+200</span>
                           </div>
                         </div>
                       </div>
@@ -924,67 +1117,163 @@ export default function ProductShowcase() {
             {activeTab === "voiceCloning" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">Voice Cloning</p>
-                  <p className="product-subtitle">Create a replica of your voice that sounds just like you</p>
+                  <p className="product-title" aria-hidden="true">Your Voice, Your Agents</p>
+                  <p className="product-subtitle">Your AI agents speak in your voice — cloned instantly, no training needed</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
-                    <div className="clone-grid">
-                      {/* Original card */}
-                      <button type="button" className="clone-card clone-card-original" aria-label="Play">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" className="clone-spinner">
-                          <g fill="none" stroke="currentColor" strokeWidth="1.8">
-                            <path strokeOpacity=".15" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            <path strokeLinecap="round" d="M20.945 13A9.004 9.004 0 0 1 13 20.945" />
-                          </g>
-                        </svg>
-                        <div className="clone-card-bottom">
-                          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ width: "1rem", height: "1rem", flex: "none" }}>
-                            <path d="M18.365 4.223a1 1 0 0 1 1.415 0A10.97 10.97 0 0 1 23 12c0 3.037-1.232 5.788-3.221 7.778a1 1 0 1 1-1.415-1.414A8.97 8.97 0 0 0 21.001 12a8.97 8.97 0 0 0-2.636-6.364 1 1 0 0 1 0-1.414" />
-                            <path d="M16.598 7.404a1 1 0 1 0-1.414 1.414A4.48 4.48 0 0 1 16.502 12a4.48 4.48 0 0 1-1.318 3.182 1 1 0 0 0 1.414 1.415A6.48 6.48 0 0 0 18.502 12a6.48 6.48 0 0 0-1.904-4.596M13 4.5c0-1.236-1.411-1.942-2.4-1.2L5.933 6.8a1 1 0 0 1-.6.2H4a3 3 0 0 0-3 3v4a3 3 0 0 0 3 3h1.333a1 1 0 0 1 .6.2l4.667 3.5c.989.742 2.4.036 2.4-1.2z" />
-                          </svg>
-                          <div className="clone-card-label-wrap">
-                            <div className="clone-card-label">Preview Original</div>
-                            <div className="clone-progress-bar clone-progress-original">
-                              <div className="clone-progress-fill" style={{ transform: "scaleX(0)" }} />
-                            </div>
-                          </div>
-                        </div>
-                      </button>
+                    <div className="vc-wrapper">
 
-                      {/* Clone card */}
-                      <button type="button" className="clone-card clone-card-clone" aria-label="Play">
-                        {/* Background gradient */}
-                        <div className="clone-card-bg">
-                          <div className="clone-card-gradient" />
-                          <div className="clone-card-noise" />
-                        </div>
-                        <div className="clone-card-ring-inset" />
-                        <svg viewBox="0 0 24 24" aria-hidden="true" className="clone-spinner">
-                          <g fill="none" stroke="currentColor" strokeWidth="1.8">
-                            <path strokeOpacity=".15" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            <path strokeLinecap="round" d="M20.945 13A9.004 9.004 0 0 1 13 20.945" />
-                          </g>
-                        </svg>
-                        <div className="clone-card-bottom">
-                          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ width: "1rem", height: "1rem", flex: "none" }}>
-                            <path d="M11.02 3.212A1.25 1.25 0 0 1 13 4.226v15.548a1.25 1.25 0 0 1-1.98 1.014l-4.935-3.552a1.25 1.25 0 0 0-.73-.236H3.75A2.75 2.75 0 0 1 1 14.25v-4.5A2.75 2.75 0 0 1 3.75 7h1.605c.262 0 .518-.082.73-.236zM17.1 13.79a.422.422 0 0 1 .8 0l.382 1.16a.42.42 0 0 0 .269.268l1.159.381a.422.422 0 0 1 0 .802l-1.159.381a.42.42 0 0 0-.269.27l-.381 1.158a.422.422 0 0 1-.802 0l-.381-1.159a.42.42 0 0 0-.269-.269l-1.159-.38a.422.422 0 0 1 0-.803l1.159-.38a.42.42 0 0 0 .269-.27zM18.939 5.906c.178-.541.944-.541 1.122 0l.534 1.623a.59.59 0 0 0 .376.376l1.623.534c.541.178.541.944 0 1.122l-1.623.534a.59.59 0 0 0-.376.377l-.534 1.622c-.178.542-.944.542-1.122 0l-.534-1.622a.59.59 0 0 0-.376-.377l-1.623-.534c-.541-.178-.541-.944 0-1.122l1.623-.534a.59.59 0 0 0 .376-.376z" />
-                          </svg>
-                          <div className="clone-card-label-wrap">
-                            <div className="clone-card-label">Preview Clone</div>
-                            <div className="clone-progress-bar clone-progress-clone">
-                              <div className="clone-progress-fill-white" style={{ transform: "scaleX(0)" }} />
-                            </div>
+                    {/* Main comparison area */}
+                    <div className="vc-compare" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+
+                      {/* ── Original card ── */}
+                      <div className="vc-card vc-card--original">
+                        <div className="vc-card-header">
+                          <div className="vc-icon-wrap vc-icon-wrap--original">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+                              <path d="M19 10v2a7 7 0 01-14 0v-2"/>
+                              <line x1="12" y1="19" x2="12" y2="23"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <div className="vc-card-title">Your Voice</div>
+                            <div className="vc-card-sub">Record once · 10 seconds</div>
                           </div>
                         </div>
-                      </button>
+
+                        <div className="vc-waveform-wrap">
+                          <AudioScrubber
+                            data={activeCloneDemo.originalWaveform}
+                            currentTime={cloneOriginalTime}
+                            duration={cloneOriginalDuration}
+                            onSeek={handleSeekOriginal}
+                            height={56}
+                            barWidth={3}
+                            barGap={1}
+                            barRadius={2}
+                            barColor="rgba(0,0,0,0.45)"
+                            showHandle={clonePlayingOriginal}
+                          />
+                        </div>
+
+                        <div className="vc-card-footer">
+                          <button
+                            type="button"
+                            className={`vc-play-btn${clonePlayingOriginal ? " vc-play-btn--active" : ""}`}
+                            onClick={handlePlayOriginal}
+                            aria-label={clonePlayingOriginal ? "Pause original" : "Play original"}
+                          >
+                            {clonePlayingOriginal ? (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                <rect x="14" y="4" width="4" height="16" rx="1"/>
+                              </svg>
+                            ) : (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5.14v13.72a1 1 0 001.5.86l11.72-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z"/>
+                              </svg>
+                            )}
+                          </button>
+                          <span className="vc-time">
+                            {formatTime(cloneOriginalTime)} / {formatTime(cloneOriginalDuration)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* ── Center lightning connector ── */}
+                      <div className="vc-connector">
+                        <div className="vc-connector-line" />
+                        <div className="vc-connector-badge">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                          </svg>
+                          <span>&lt; 1s</span>
+                        </div>
+                        <div className="vc-connector-line" />
+                      </div>
+
+                      {/* ── Clone card ── */}
+                      <div className="vc-card vc-card--clone">
+                        {/* gradient bg */}
+                        <div className="vc-card-bg">
+                          <div className="vc-card-gradient" style={{ background: `linear-gradient(135deg, ${activeCloneDemo.color}, ${activeCloneDemo.color}dd, ${activeCloneDemo.color}88)` }} />
+                          <div className="vc-card-noise" />
+                        </div>
+
+                        <div className="vc-card-header">
+                          <div className="vc-icon-wrap vc-icon-wrap--clone">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M11.02 3.212A1.25 1.25 0 0113 4.226v15.548a1.25 1.25 0 01-1.98 1.014l-4.935-3.552a1.25 1.25 0 00-.73-.236H3.75A2.75 2.75 0 011 14.25v-4.5A2.75 2.75 0 013.75 7h1.605c.262 0 .518-.082.73-.236zM17.1 13.79a.422.422 0 01.8 0l.382 1.16a.42.42 0 00.269.268l1.159.381a.422.422 0 010 .802l-1.159.381a.42.42 0 00-.269.27l-.381 1.158a.422.422 0 01-.802 0l-.381-1.159a.42.42 0 00-.269-.269l-1.159-.38a.422.422 0 010-.803l1.159-.38a.42.42 0 00.269-.27z"/>
+                            </svg>
+                          </div>
+                          <div>
+                            <div className="vc-card-title vc-card-title--light">Your AI Agent</div>
+                            <div className="vc-card-sub vc-card-sub--light">Speaks just like you</div>
+                          </div>
+                        </div>
+
+                        <div className="vc-waveform-wrap">
+                          <AudioScrubber
+                            data={activeCloneDemo.cloneWaveform}
+                            currentTime={cloneCloneTime}
+                            duration={cloneCloneDuration}
+                            onSeek={handleSeekClone}
+                            height={56}
+                            barWidth={3}
+                            barGap={1}
+                            barRadius={2}
+                            barColor="rgba(255,255,255,0.5)"
+                            showHandle={clonePlayingClone}
+                          />
+                        </div>
+
+                        <div className="vc-card-footer">
+                          <button
+                            type="button"
+                            className={`vc-play-btn vc-play-btn--light${clonePlayingClone ? " vc-play-btn--active-light" : ""}`}
+                            onClick={handlePlayClone}
+                            aria-label={clonePlayingClone ? "Pause clone" : "Play clone"}
+                          >
+                            {clonePlayingClone ? (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <rect x="6" y="4" width="4" height="16" rx="1"/>
+                                <rect x="14" y="4" width="4" height="16" rx="1"/>
+                              </svg>
+                            ) : (
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8 5.14v13.72a1 1 0 001.5.86l11.72-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z"/>
+                              </svg>
+                            )}
+                          </button>
+                          <span className="vc-time vc-time--light">
+                            {formatTime(cloneCloneTime)} / {formatTime(cloneCloneDuration)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
+
+                    {/* Stats row */}
+                    <div className="vc-stats">
+                      <div className="vc-stat">
+                        <div className="vc-stat-value">0</div>
+                        <div className="vc-stat-label">Training Needed</div>
+                      </div>
+                      <div className="vc-stat-divider" />
+                      <div className="vc-stat">
+                        <div className="vc-stat-value">&lt; 1s</div>
+                        <div className="vc-stat-label">Clone Speed</div>
+                      </div>
+                    </div>
+                    </div>
+
                   </div>
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Sign up</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Give your agents your voice</a>
                 </div>
               </div>
             )}
