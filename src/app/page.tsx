@@ -7,10 +7,10 @@ const TAB_DURATION = 5000; // ms per tab
 
 /* ─── data ─── */
 const TABS = [
-  { key: "speech", label: "Text to Speech" },
-  { key: "agents", label: "Agents" },
-  { key: "music", label: "Music" },
-  { key: "transcription", label: "Speech to Text" },
+  { key: "agents", label: "AI Crew" },
+  { key: "workflows", label: "Workflows" },
+  { key: "chatbot", label: "Chatbot Builder" },
+  { key: "speech", label: "Voice Agents" },
   { key: "voiceCloning", label: "Voice Cloning" },
 ];
 
@@ -388,46 +388,180 @@ export default function ProductShowcase() {
             {activeTab === "agents" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">Agents</p>
-                  <p className="product-subtitle">Configure, deploy and monitor conversational agents</p>
+                  <p className="product-title" aria-hidden="true">AI Crew</p>
+                  <p className="product-subtitle">Collaborate with your AI-powered meeting room</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
-                  <div className="agents-center">
-                    <div className="agents-orb-wrap" style={{ opacity: 1 }}>
-                      <div className="agents-orb-outer">
-                        {/* Orb placeholder */}
-                        <div className="agents-orb-ring">
-                          <div className="agents-orb-circle">
-                            <div className="agents-orb-gradient" />
-                            <div className="agents-orb-ring-inset" />
+                  <div className="main-content-inner">
+                    <div className="mt-card">
+                      {/* ── Header ── */}
+                      <div className="mt-header">
+                        <div className="mt-header-left">
+                          <button className="mt-back-btn" aria-label="Back">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
+                          </button>
+                          <div>
+                            <div className="mt-room-title">Project Reporting – Week 1</div>
+                            <div className="mt-room-sub">George&apos;s Meeting Room</div>
                           </div>
                         </div>
-                        {/* Center interactive zone */}
-                        <div className="agents-orb-interactive">
-                          <div className="agents-chat-zone" style={{ maskImage: "linear-gradient(transparent, white 3rem, white calc(100% - 5rem), transparent calc(100% - 2rem))" }}>
-                            <div className="agents-chat-messages" />
+                        <div className="mt-header-right">
+                          <div className="mt-join-notif">
+                            <span><strong>Drew Bieber</strong> wants to join the meeting</span>
+                            <button className="mt-notif-btn mt-notif-btn--reject" aria-label="Reject">✕</button>
+                            <button className="mt-notif-btn mt-notif-btn--accept" aria-label="Accept">✓</button>
                           </div>
                         </div>
                       </div>
-                      {/* Bottom controls */}
-                      <div className="agents-controls">
-                        <div style={{ width: 0, flex: "none" }} />
-                        <button type="button" className="agents-call-btn" aria-label="Start Call">
-                          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style={{ width: "1.5rem", height: "1.5rem", marginTop: "0.0625rem" }}>
-                            <path d="M5.723 3C4.248 3 2.927 4.206 3.097 5.796c.251 2.36.993 4.662 2.19 6.723a17.1 17.1 0 0 0 6.195 6.195c2.075 1.205 4.348 1.913 6.69 2.172 1.598.177 2.829-1.143 2.829-2.636v-1.753a2.75 2.75 0 0 0-1.974-2.639l-1.682-.495a2.69 2.69 0 0 0-2.702.719c-.377.392-.914.452-1.285.212a12.3 12.3 0 0 1-3.652-3.651c-.24-.372-.18-.908.213-1.285a2.69 2.69 0 0 0 .718-2.702l-.494-1.682A2.75 2.75 0 0 0 7.504 3z" />
-                          </svg>
-                        </button>
-                        <form className="agents-input-form" style={{ borderRadius: 24, opacity: 1 }}>
-                          <button type="button" className="agents-input-overlay" aria-label="Or type a message…" />
-                          <input
-                            className="agents-input"
-                            aria-label="Or type a message…"
-                            placeholder="Or type a message…"
-                            type="text"
-                            readOnly
-                          />
-                        </form>
+
+                      {/* ── Body split ── */}
+                      <div className="mt-body">
+                        {/* Left: Video area */}
+                        <div className="mt-video-area">
+                          <div className="mt-video-main">
+                            {/* Placeholder for video */}
+                            <div className="mt-video-bg" />
+                            {/* You badge */}
+                            <div className="mt-you-badge"><span className="mt-you-avatar">G</span> You</div>
+                            {/* Recording indicator */}
+                            <div className="mt-recording">
+                              <span className="mt-rec-dot" />
+                              Recording in Progress....
+                              <div className="mt-layout-btns">
+                                <button className="mt-layout-btn" aria-label="Layout 1">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+                                </button>
+                                <button className="mt-layout-btn" aria-label="Layout 2">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></svg>
+                                </button>
+                              </div>
+                            </div>
+                            {/* Bottom controls */}
+                            <div className="mt-controls">
+                              <button className="mt-ctrl-btn" aria-label="Microphone">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                              </button>
+                              <button className="mt-ctrl-btn" aria-label="Camera">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                              </button>
+                              <button className="mt-ctrl-btn" aria-label="Screen share">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                              </button>
+                              <button className="mt-ctrl-btn mt-ctrl-btn--end" aria-label="End call">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5.723 3C4.248 3 2.927 4.206 3.097 5.796c.251 2.36.993 4.662 2.19 6.723a17.1 17.1 0 006.195 6.195c2.075 1.205 4.348 1.913 6.69 2.172 1.598.177 2.829-1.143 2.829-2.636v-1.753a2.75 2.75 0 00-1.974-2.639l-1.682-.495a2.69 2.69 0 00-2.702.719c-.377.392-.914.452-1.285.212a12.3 12.3 0 01-3.652-3.651c-.24-.372-.18-.908.213-1.285a2.69 2.69 0 00.718-2.702l-.494-1.682A2.75 2.75 0 007.504 3z"/></svg>
+                              </button>
+                            </div>
+                            {/* Subtitle bar */}
+                            <div className="mt-subtitle-bar">
+                              <div className="mt-subtitle-wave">
+                                <svg width="20" height="16" viewBox="0 0 20 16"><rect x="1" y="4" width="2" height="8" rx="1" fill="#fff"/><rect x="5" y="2" width="2" height="12" rx="1" fill="#fff"/><rect x="9" y="5" width="2" height="6" rx="1" fill="#fff"/><rect x="13" y="1" width="2" height="14" rx="1" fill="#fff"/><rect x="17" y="6" width="2" height="4" rx="1" fill="#fff"/></svg>
+                              </div>
+                              <span className="mt-subtitle-label">CC/Subtitles</span>
+                              <span className="mt-subtitle-text">Hi guys thank you so much for coming – uhh been a long time no...</span>
+                              <button className="mt-subtitle-settings" aria-label="Settings">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                              </button>
+                            </div>
+                          </div>
+                          {/* Participant strip */}
+                          <div className="mt-participants">
+                            <div className="mt-participant">
+                              <div className="mt-participant-thumb mt-participant-thumb--1" />
+                              <span className="mt-participant-mic">
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                              </span>
+                              <span className="mt-participant-name">Alicia Padlock</span>
+                            </div>
+                            <div className="mt-participant">
+                              <div className="mt-participant-thumb mt-participant-thumb--2" />
+                              <span className="mt-participant-mic">
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                              </span>
+                              <span className="mt-participant-name">Sri Veronica</span>
+                            </div>
+                            <div className="mt-participant">
+                              <div className="mt-participant-thumb mt-participant-thumb--3" />
+                              <span className="mt-participant-mic">
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                              </span>
+                              <span className="mt-participant-name">Cortyn Stefan</span>
+                            </div>
+                            <button className="mt-participant-more" aria-label="More participants">›</button>
+                          </div>
+                        </div>
+
+                        {/* Right: Sidebar */}
+                        <div className="mt-sidebar">
+                          {/* Summary + Tasks row */}
+                          <div className="mt-info-row">
+                            <div className="mt-info-card">
+                              <div className="mt-info-card-title">Summary</div>
+                              <p className="mt-info-card-text">During the meeting, we covered some topics and reported that we achieved several targets set during the prev meeting. In today...</p>
+                              <button className="mt-info-edit" aria-label="Edit">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                              </button>
+                            </div>
+                            <div className="mt-info-card">
+                              <div className="mt-info-card-title">Tasks List</div>
+                              <div className="mt-task">
+                                <span className="mt-task-check mt-task-check--done">✓</span>
+                                <span>Team Discussion</span>
+                              </div>
+                              <div className="mt-task">
+                                <span className="mt-task-check" />
+                                <span>Daily Work Review at 1:00 PM</span>
+                              </div>
+                              <div className="mt-task">
+                                <span className="mt-task-check" />
+                                <span>Weekly Report Stand Up Me...</span>
+                              </div>
+                              <button className="mt-info-edit" aria-label="Edit">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Chat tabs */}
+                          <div className="mt-chat-tabs">
+                            <button className="mt-chat-tab mt-chat-tab--active">Room Chat</button>
+                            <button className="mt-chat-tab">Participant</button>
+                          </div>
+
+                          {/* Chat messages */}
+                          <div className="mt-chat-messages">
+                            <div className="mt-chat-bubble">
+                              <div className="mt-chat-bubble-head">
+                                <span className="mt-chat-sender">Alicia Padlock</span>
+                                <span className="mt-chat-time">2:02 PM</span>
+                              </div>
+                              <p className="mt-chat-text">How about our problem last week?</p>
+                            </div>
+                            <div className="mt-chat-bubble mt-chat-bubble--you">
+                              <div className="mt-chat-bubble-head">
+                                <span className="mt-chat-sender">You</span>
+                                <span className="mt-chat-time">2:03 PM</span>
+                              </div>
+                              <p className="mt-chat-text">It&apos;s all clear, no worries 😊</p>
+                            </div>
+                            <div className="mt-chat-bubble">
+                              <div className="mt-chat-bubble-head">
+                                <span className="mt-chat-sender">Sri Veronica</span>
+                                <span className="mt-chat-time">2:10 PM</span>
+                              </div>
+                              <p className="mt-chat-text">Yes, it&apos;s been solved. Since we have daily meeting to discuss everything 🙂</p>
+                            </div>
+                          </div>
+
+                          {/* Chat input */}
+                          <div className="mt-chat-input">
+                            <input type="text" placeholder="Type message here..." readOnly />
+                            <button className="mt-chat-emoji" aria-label="Emoji">😊</button>
+                            <button className="mt-chat-send" aria-label="Send">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -440,59 +574,111 @@ export default function ProductShowcase() {
             )}
 
             {/* ── Music Tab Panel ── */}
-            {activeTab === "music" && (
+            {activeTab === "workflows" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">Music</p>
-                  <p className="product-subtitle">Generate studio-quality tracks in any genre or style</p>
+                  <p className="product-title" aria-hidden="true">Workflows</p>
+                  <p className="product-subtitle">Build automated AI workflows with visual drag-and-drop</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
-                    <div className="music-card">
-                      {/* Text prompt area */}
-                      <div className="music-textarea-scroll">
-                        <div className="music-textarea-wrap">
-                          <div className="music-textarea-inner">
-                            <div className="music-text-display" style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
-                              A rich orchestral track, deeply cinematic, symphonic strings, brass and woodwinds, an epic fantasy, triumphant, jubilant, crescendo, finale.{"\u200B"}
-                            </div>
-                            <textarea
-                              className="music-textarea"
-                              spellCheck={false}
-                              maxLength={500}
-                              defaultValue="A rich orchestral track, deeply cinematic, symphonic strings, brass and woodwinds, an epic fantasy, triumphant, jubilant, crescendo, finale."
-                            />
+                    <div className="wf-split">
+                      {/* ── Left: Flowchart ── */}
+                      <div className="wf-panel wf-panel-left">
+                        <div className="wf-flow">
+                          {/* Step 1 */}
+                          <div className="wf-step">
+                            <span className="wf-step-icon wf-step-icon--purple">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 012 2v3a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/><path d="M5 14h14a2 2 0 012 2v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 012-2z"/></svg>
+                            </span>
+                            <span className="wf-step-label">Receive support ticket</span>
+                          </div>
+                          <div className="wf-connector">
+                            <div className="wf-connector-line" />
+                            <span className="wf-connector-label">Analyze ticket</span>
+                          </div>
+                          {/* Step 2 */}
+                          <div className="wf-step">
+                            <span className="wf-step-icon wf-step-icon--teal">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            </span>
+                            <span className="wf-step-label">Search knowledge base</span>
+                          </div>
+                          <div className="wf-connector">
+                            <div className="wf-connector-line" />
+                          </div>
+                          {/* Step 3 */}
+                          <div className="wf-step">
+                            <span className="wf-step-icon wf-step-icon--teal">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            </span>
+                            <span className="wf-step-label">Write response</span>
+                          </div>
+                          <div className="wf-connector">
+                            <div className="wf-connector-line" />
+                          </div>
+                          {/* Step 4 */}
+                          <div className="wf-step">
+                            <span className="wf-step-icon wf-step-icon--purple">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </span>
+                            <span className="wf-step-label">Resolve ticket</span>
                           </div>
                         </div>
-                        <div className="text-bottom-fade" />
                       </div>
-                      {/* Player bar */}
-                      <div className="music-player-bar">
-                        <div className="music-player-info">
-                          <div className="music-player-info-inner" style={{ opacity: 1 }}>
-                            {/* Track orb */}
-                            <div className="music-track-orb-wrap">
-                              <div className="music-track-orb">
-                                <div className="music-track-orb-gradient" />
-                                <div className="music-track-orb-ring-inset" />
-                              </div>
-                            </div>
-                            {/* Track info – desktop */}
-                            <div className="music-track-info">
-                              <div className="music-track-name">
-                                <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Epic Symphony</div>
-                              </div>
-                              <div className="music-track-duration">0:50</div>
-                            </div>
+
+                      {/* ── Right: Chat preview ── */}
+                      <div className="wf-panel wf-panel-right">
+                        <div className="wf-browser-chrome">
+                          <div className="wf-browser-dots">
+                            <span /><span /><span />
                           </div>
                         </div>
-                        <div className="music-player-controls">
-                          <button type="button" className="music-play-btn" aria-label="Play">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" style={{ width: "1rem", height: "1rem" }}>
-                              <path fill="currentColor" d="M9.244 2.368C7.414 1.184 5 2.497 5 4.676v14.648c0 2.18 2.414 3.493 4.244 2.309l11.318-7.324c1.675-1.084 1.675-3.534 0-4.618z" />
-                            </svg>
-                          </button>
+                        <div className="wf-browser-body">
+                          {/* Skeleton lines */}
+                          <div className="wf-skeleton-line wf-skeleton-line--w70" />
+                          <div className="wf-skeleton-line wf-skeleton-line--w50" />
+                          <div className="wf-skeleton-row">
+                            <div className="wf-skeleton-block" />
+                            <div className="wf-skeleton-block" />
+                          </div>
+                          <div className="wf-skeleton-line wf-skeleton-line--w60" />
+                          <div className="wf-skeleton-row">
+                            <div className="wf-skeleton-block" />
+                            <div className="wf-skeleton-block" />
+                          </div>
+
+                          {/* Chat widget */}
+                          <div className="wf-chat-widget">
+                            <div className="wf-chat-header">
+                              <span className="wf-chat-title">SUPPORT AGENT</span>
+                              <button className="wf-chat-minimize" aria-label="Minimize">—</button>
+                            </div>
+                            <div className="wf-chat-messages">
+                              <div className="wf-chat-msg wf-chat-msg--bot">
+                                <span className="wf-chat-avatar">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </span>
+                                <span>Hi! How can I help?</span>
+                              </div>
+                              <div className="wf-chat-msg wf-chat-msg--user">
+                                <span>What&apos;s your return policy?</span>
+                              </div>
+                              <div className="wf-chat-msg wf-chat-msg--bot">
+                                <span className="wf-chat-avatar">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </span>
+                                <span>You can return your items within 30 days!</span>
+                              </div>
+                            </div>
+                            <div className="wf-chat-input">
+                              <input type="text" placeholder="Ask" readOnly />
+                              <button className="wf-chat-send" aria-label="Send">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -506,64 +692,81 @@ export default function ProductShowcase() {
             )}
 
             {/* ── Speech to Text Tab Panel ── */}
-            {activeTab === "transcription" && (
+            {activeTab === "chatbot" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">Speech to Text</p>
-                  <p className="product-subtitle">Transcribe any audio with state of the art accuracy</p>
+                  <p className="product-title" aria-hidden="true">Chatbot Builder</p>
+                  <p className="product-subtitle">Design intelligent chatbots that analyze and act on your data</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
-                    <div className="stt-card">
-                      {/* Bottom action buttons */}
-                      <div className="stt-actions">
-                        <div className="stt-actions-row">
-                          {/* Sign up link (left) */}
-                          <div className="stt-signup-left">
-                            <a className="stt-signup-btn-dark" href="#">Sign up</a>
+                    <div className="cb-split">
+                      {/* ── Left: Flowchart ── */}
+                      <div className="cb-panel cb-panel-left">
+                        <div className="cb-flow">
+                          {/* Step 1 */}
+                          <div className="cb-step">
+                            <span className="cb-step-icon cb-step-icon--amber">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            </span>
+                            <span className="cb-step-label">Receive document</span>
                           </div>
-                          {/* Center controls */}
-                          <div className="stt-controls-pill">
-                            <div className="stt-controls-inner">
-                              <div className="stt-controls-flex">
-                                {/* Record button */}
-                                <div style={{ display: "flex", opacity: 1 }}>
-                                  <button type="button" className="stt-record-group" aria-label="Start recording">
-                                    <div className="stt-record-btn">
-                                      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style={{ width: "1.25rem", height: "1.25rem" }}>
-                                        <path d="M7.001 7a5 5 0 0 1 10 0v4.5a5 5 0 0 1-10 0z" />
-                                        <path d="M5.812 14.2a.75.75 0 1 0-1.374.6 8.26 8.26 0 0 0 6.813 4.916v1.534a.75.75 0 1 0 1.5 0v-1.534a8.26 8.26 0 0 0 6.813-4.916.75.75 0 1 0-1.374-.6 6.752 6.752 0 0 1-12.378 0" />
-                                      </svg>
-                                    </div>
-                                  </button>
-                                </div>
-                                {/* Upload button */}
-                                <div className="stt-upload-group" style={{ opacity: 1 }}>
-                                  <div className="stt-upload-wrapper">
-                                    <button type="button" className="stt-upload-btn" aria-label="Select audio or video file">
-                                      <div className="stt-upload-icon">
-                                        <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" style={{ width: "1.25rem", height: "1.25rem" }}>
-                                          <path fillRule="evenodd" clipRule="evenodd" d="M12 3a.75.75 0 0 1 .53.22l4.5 4.5a.75.75 0 0 1-1.06 1.06l-3.22-3.22V15a.75.75 0 0 1-1.5 0V5.56L8.03 8.78a.75.75 0 0 1-1.06-1.06l4.5-4.5A.75.75 0 0 1 12 3" />
-                                          <path fillRule="evenodd" clipRule="evenodd" d="M3.75 14a.75.75 0 0 1 .75.75v3.5c0 .69.56 1.25 1.25 1.25h12.5c.69 0 1.25-.56 1.25-1.25v-3.5a.75.75 0 0 1 1.5 0v3.5A2.75 2.75 0 0 1 18.25 21H5.75A2.75 2.75 0 0 1 3 18.25v-3.5a.75.75 0 0 1 .75-.75" />
-                                        </svg>
-                                      </div>
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+                          <div className="cb-connector"><div className="cb-connector-line" /></div>
+                          {/* Step 2 */}
+                          <div className="cb-step">
+                            <span className="cb-step-icon cb-step-icon--teal">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                            </span>
+                            <span className="cb-step-label">Analyze and synthesize text</span>
                           </div>
-                          {/* Sign up link (right) */}
-                          <div className="stt-signup-right">
-                            <a className="stt-signup-btn-light" href="#">Sign up</a>
+                          <div className="cb-connector"><div className="cb-connector-line" /></div>
+                          {/* Step 3 */}
+                          <div className="cb-step">
+                            <span className="cb-step-icon cb-step-icon--teal">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            </span>
+                            <span className="cb-step-label">Write brief</span>
+                          </div>
+                          <div className="cb-connector"><div className="cb-connector-line" /></div>
+                          {/* Step 4 */}
+                          <div className="cb-step">
+                            <span className="cb-step-icon cb-step-icon--red">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                            </span>
+                            <span className="cb-step-label">Email stakeholders</span>
                           </div>
                         </div>
                       </div>
-                      {/* Center message */}
-                      <div className="stt-message" style={{ opacity: 1 }}>
-                        <div className="stt-message-inner">
-                          <p className="stt-message-text">Record or upload to test ElevenLabs' most accurate transcription models</p>
+
+                      {/* ── Right: Analyzed report preview ── */}
+                      <div className="cb-panel cb-panel-right">
+                        {/* Badge */}
+                        <div className="cb-badge-wrap">
+                          <div className="cb-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.09 6.26L20.18 9l-5 4.27L16.82 20 12 16.9 7.18 20l1.64-6.73L3.82 9l6.09-.74z"/></svg>
+                            Analyzed &apos;Q4 Report&apos;
+                          </div>
+                        </div>
+                        {/* Document card */}
+                        <div className="cb-doc-card">
+                          {/* Header */}
+                          <div className="cb-doc-header">
+                            <div className="cb-doc-avatar">
+                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div>
+                              <div className="cb-doc-title">Investor Update</div>
+                              <div className="cb-doc-subtitle">We&apos;re ending the year on a positive trend.</div>
+                            </div>
+                          </div>
+                          {/* Body */}
+                          <div className="cb-doc-body">
+                            <p className="cb-doc-label">TL;DR:</p>
+                            <p className="cb-doc-text">Q4 was our strongest quarter yet. ACME achieved record sales growth as demand for AI-powered climate systems surged.</p>
+                            <p className="cb-doc-text cb-doc-text--faded">We closed the year profitably, expanded our customer base, and are now ramping up hiring across growth, engineering, and partnerships to meet accelerating demand.</p>
+                            <p className="cb-doc-footer">Q4 2025 Investor Update</p>
+                          </div>
                         </div>
                       </div>
                     </div>
