@@ -538,105 +538,157 @@ export default function ProductShowcase() {
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
                   <p className="product-title" aria-hidden="true">Workflows</p>
-                  <p className="product-subtitle">Build automated AI workflows with visual drag-and-drop</p>
+                  <p className="product-subtitle">Turn inbound leads into closed deals — automatically</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
                     <div className="wf-split">
-                      {/* ── Left: Flowchart ── */}
+                      {/* ── Left: Lead-to-Deal Pipeline ── */}
                       <div className="wf-panel wf-panel-left">
                         <div className="wf-flow">
-                          {/* Step 1 */}
-                          <div className="wf-step">
+                          {/* Step 1 — Trigger */}
+                          <div className="wf-step wf-step-animated" style={{ animationDelay: '0s' }}>
+                            <span className="wf-step-icon wf-step-icon--orange">
+                              {/* Zap / trigger icon */}
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            </span>
+                            <span className="wf-step-label">New lead from Form</span>
+                            <span className="wf-step-badge wf-step-badge--trigger">Trigger</span>
+                          </div>
+                          {/* Arrow */}
+                          <div className="wf-arrow" style={{ animationDelay: '0.3s' }}>
+                            <svg className="wf-arrow-svg" viewBox="0 0 24 32" fill="none">
+                              <line x1="12" y1="0" x2="12" y2="24" stroke="#7c3aed" strokeWidth="2" className="wf-arrow-line" />
+                              <polygon points="7,22 12,30 17,22" fill="#7c3aed" className="wf-arrow-head" />
+                            </svg>
+                          </div>
+                          {/* Step 2 — AI Qualify */}
+                          <div className="wf-step wf-step-animated" style={{ animationDelay: '0.5s' }}>
                             <span className="wf-step-icon wf-step-icon--purple">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 5v2"/><path d="M15 11v2"/><path d="M15 17v2"/><path d="M5 5h14a2 2 0 012 2v3a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/><path d="M5 14h14a2 2 0 012 2v3a2 2 0 01-2 2H5a2 2 0 01-2-2v-3a2 2 0 012-2z"/></svg>
+                              {/* Brain / AI icon */}
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a4 4 0 014 4c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2a4 4 0 014-4z"/><path d="M8 8v1a4 4 0 008 0V8"/><path d="M6 13a6 6 0 0012 0"/><path d="M9 22h6"/><path d="M12 18v4"/></svg>
                             </span>
-                            <span className="wf-step-label">Receive support ticket</span>
+                            <span className="wf-step-label">AI Qualify &amp; Score</span>
+                            <span className="wf-step-badge wf-step-badge--ai">Gemini</span>
                           </div>
-                          <div className="wf-connector">
-                            <div className="wf-connector-line" />
-                            <span className="wf-connector-label">Analyze ticket</span>
+                          {/* Arrow */}
+                          <div className="wf-arrow" style={{ animationDelay: '0.8s' }}>
+                            <svg className="wf-arrow-svg" viewBox="0 0 24 32" fill="none">
+                              <line x1="12" y1="0" x2="12" y2="24" stroke="#7c3aed" strokeWidth="2" className="wf-arrow-line" />
+                              <polygon points="7,22 12,30 17,22" fill="#7c3aed" className="wf-arrow-head" />
+                            </svg>
+                            <span className="wf-connector-label" style={{ animationDelay: '0.9s' }}>Score ≥ 70</span>
                           </div>
-                          {/* Step 2 */}
-                          <div className="wf-step">
+                          {/* Step 3 — Send Email */}
+                          <div className="wf-step wf-step-animated" style={{ animationDelay: '1.05s' }}>
                             <span className="wf-step-icon wf-step-icon--teal">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                              {/* Mail icon */}
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
                             </span>
-                            <span className="wf-step-label">Search knowledge base</span>
+                            <span className="wf-step-label">Send outreach email</span>
+                            <span className="wf-step-badge wf-step-badge--action">SendGrid</span>
                           </div>
-                          <div className="wf-connector">
-                            <div className="wf-connector-line" />
+                          {/* Arrow */}
+                          <div className="wf-arrow" style={{ animationDelay: '1.35s' }}>
+                            <svg className="wf-arrow-svg" viewBox="0 0 24 32" fill="none">
+                              <line x1="12" y1="0" x2="12" y2="24" stroke="#7c3aed" strokeWidth="2" className="wf-arrow-line" />
+                              <polygon points="7,22 12,30 17,22" fill="#7c3aed" className="wf-arrow-head" />
+                            </svg>
+                            <span className="wf-connector-label" style={{ animationDelay: '1.45s' }}>Wait 2 days</span>
                           </div>
-                          {/* Step 3 */}
-                          <div className="wf-step">
-                            <span className="wf-step-icon wf-step-icon--teal">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                          {/* Step 4 — Follow-up */}
+                          <div className="wf-step wf-step-animated" style={{ animationDelay: '1.6s' }}>
+                            <span className="wf-step-icon wf-step-icon--blue">
+                              {/* Repeat / follow-up icon */}
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
                             </span>
-                            <span className="wf-step-label">Write response</span>
+                            <span className="wf-step-label">Auto follow-up</span>
+                            <span className="wf-step-badge wf-step-badge--action">×5</span>
                           </div>
-                          <div className="wf-connector">
-                            <div className="wf-connector-line" />
+                          {/* Arrow */}
+                          <div className="wf-arrow" style={{ animationDelay: '1.9s' }}>
+                            <svg className="wf-arrow-svg" viewBox="0 0 24 32" fill="none">
+                              <line x1="12" y1="0" x2="12" y2="24" stroke="#7c3aed" strokeWidth="2" className="wf-arrow-line" />
+                              <polygon points="7,22 12,30 17,22" fill="#7c3aed" className="wf-arrow-head" />
+                            </svg>
                           </div>
-                          {/* Step 4 */}
-                          <div className="wf-step">
-                            <span className="wf-step-icon wf-step-icon--purple">
+                          {/* Step 5 — CRM */}
+                          <div className="wf-step wf-step-animated" style={{ animationDelay: '2.1s' }}>
+                            <span className="wf-step-icon wf-step-icon--green">
+                              {/* Check-circle icon */}
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                             </span>
-                            <span className="wf-step-label">Resolve ticket</span>
+                            <span className="wf-step-label">Create deal in CRM</span>
+                            <span className="wf-step-badge wf-step-badge--action">HubSpot</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* ── Right: Chat preview ── */}
+                      {/* ── Right: Lead scoring dashboard ── */}
                       <div className="wf-panel wf-panel-right">
-                        <div className="wf-browser-chrome">
-                          <div className="wf-browser-dots">
-                            <span /><span /><span />
-                          </div>
+                        <div className="wf-dash-header">
+                          <span className="wf-dash-title">Lead Pipeline</span>
+                          <span className="wf-dash-live">● Live</span>
                         </div>
-                        <div className="wf-browser-body">
-                          {/* Skeleton lines */}
-                          <div className="wf-skeleton-line wf-skeleton-line--w70" />
-                          <div className="wf-skeleton-line wf-skeleton-line--w50" />
-                          <div className="wf-skeleton-row">
-                            <div className="wf-skeleton-block" />
-                            <div className="wf-skeleton-block" />
-                          </div>
-                          <div className="wf-skeleton-line wf-skeleton-line--w60" />
-                          <div className="wf-skeleton-row">
-                            <div className="wf-skeleton-block" />
-                            <div className="wf-skeleton-block" />
-                          </div>
-
-                          {/* Chat widget */}
-                          <div className="wf-chat-widget">
-                            <div className="wf-chat-header">
-                              <span className="wf-chat-title">SUPPORT AGENT</span>
-                              <button className="wf-chat-minimize" aria-label="Minimize">—</button>
+                        <div className="wf-dash-body">
+                          {/* Lead row 1 */}
+                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '0.6s' }}>
+                            <div className="wf-lead-info">
+                              <span className="wf-lead-name">Sarah Chen</span>
+                              <span className="wf-lead-company">Acme Corp</span>
                             </div>
-                            <div className="wf-chat-messages">
-                              <div className="wf-chat-msg wf-chat-msg--bot">
-                                <span className="wf-chat-avatar">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                                </span>
-                                <span>Hi! How can I help?</span>
-                              </div>
-                              <div className="wf-chat-msg wf-chat-msg--user">
-                                <span>What&apos;s your return policy?</span>
-                              </div>
-                              <div className="wf-chat-msg wf-chat-msg--bot">
-                                <span className="wf-chat-avatar">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                                </span>
-                                <span>You can return your items within 30 days!</span>
-                              </div>
+                            <div className="wf-lead-meta">
+                              <span className="wf-lead-score wf-lead-score--high">92</span>
+                              <span className="wf-lead-status wf-lead-status--qualified">Qualified</span>
                             </div>
-                            <div className="wf-chat-input">
-                              <input type="text" placeholder="Ask" readOnly />
-                              <button className="wf-chat-send" aria-label="Send">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-                              </button>
+                          </div>
+                          {/* Lead row 2 */}
+                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '0.9s' }}>
+                            <div className="wf-lead-info">
+                              <span className="wf-lead-name">James Miller</span>
+                              <span className="wf-lead-company">TechFlow Inc</span>
+                            </div>
+                            <div className="wf-lead-meta">
+                              <span className="wf-lead-score wf-lead-score--high">85</span>
+                              <span className="wf-lead-status wf-lead-status--emailed">Email sent</span>
+                            </div>
+                          </div>
+                          {/* Lead row 3 */}
+                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '1.2s' }}>
+                            <div className="wf-lead-info">
+                              <span className="wf-lead-name">Priya Sharma</span>
+                              <span className="wf-lead-company">DataBridge</span>
+                            </div>
+                            <div className="wf-lead-meta">
+                              <span className="wf-lead-score wf-lead-score--med">61</span>
+                              <span className="wf-lead-status wf-lead-status--review">In review</span>
+                            </div>
+                          </div>
+                          {/* Lead row 4 */}
+                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '1.5s' }}>
+                            <div className="wf-lead-info">
+                              <span className="wf-lead-name">Tom Bradley</span>
+                              <span className="wf-lead-company">NovaPay</span>
+                            </div>
+                            <div className="wf-lead-meta">
+                              <span className="wf-lead-score wf-lead-score--low">34</span>
+                              <span className="wf-lead-status wf-lead-status--rejected">Not qualified</span>
+                            </div>
+                          </div>
+                          {/* Stats row */}
+                          <div className="wf-dash-stats wf-lead-animated" style={{ animationDelay: '1.8s' }}>
+                            <div className="wf-dash-stat">
+                              <span className="wf-dash-stat-val">127</span>
+                              <span className="wf-dash-stat-lbl">Leads today</span>
+                            </div>
+                            <div className="wf-dash-stat">
+                              <span className="wf-dash-stat-val">82%</span>
+                              <span className="wf-dash-stat-lbl">Auto-qualified</span>
+                            </div>
+                            <div className="wf-dash-stat">
+                              <span className="wf-dash-stat-val">3.2×</span>
+                              <span className="wf-dash-stat-lbl">Faster close</span>
                             </div>
                           </div>
                         </div>
@@ -651,102 +703,127 @@ export default function ProductShowcase() {
               </div>
             )}
 
-            {/* ── Speech to Text Tab Panel ── */}
+            {/* ── Chatbot Builder Tab Panel ── */}
             {activeTab === "chatbot" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
                   <p className="product-title" aria-hidden="true">Chatbot Builder</p>
-                  <p className="product-subtitle">Design intelligent chatbots that analyze and act on your data</p>
+                  <p className="product-subtitle">Your customers shouldn&apos;t wait hours for a simple answer</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
                     <div className="cb-split">
-                      {/* ── Left: Flowchart ── */}
+                      {/* ── Left: The problem → solution story ── */}
                       <div className="cb-panel cb-panel-left">
-                        <div className="cb-flow">
-                          {/* Step 1 */}
-                          <div className="cb-step">
-                            <span className="cb-step-icon cb-step-icon--amber">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                            </span>
-                            <span className="cb-step-label">Receive document</span>
+                        <div className="cb-story">
+                          {/* Before — the pain */}
+                          <div className="cb-card cb-card--before cb-card--anim" style={{ animationDelay: '0.1s' }}>
+                            <div className="cb-card-badge cb-card-badge--red">Before</div>
+                            <div className="cb-card-stat">
+                              <span className="cb-card-number">4h 23m</span>
+                              <span className="cb-card-unit">avg. response</span>
+                            </div>
+                            <div className="cb-card-detail">
+                              <span className="cb-card-icon cb-card-icon--red">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+                              </span>
+                              <span className="cb-card-metric">42% ticket abandonment</span>
+                            </div>
                           </div>
-                          <div className="cb-connector"><div className="cb-connector-line" /></div>
-                          {/* Step 2 */}
-                          <div className="cb-step">
-                            <span className="cb-step-icon cb-step-icon--teal">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                            </span>
-                            <span className="cb-step-label">Analyze and synthesize text</span>
+
+                          {/* The transformation arrow */}
+                          <div className="cb-transform cb-card--anim" style={{ animationDelay: '0.45s' }}>
+                            <div className="cb-transform-line" />
+                            <div className="cb-transform-pill">
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                              <span>AI activated</span>
+                            </div>
+                            <div className="cb-transform-line" />
                           </div>
-                          <div className="cb-connector"><div className="cb-connector-line" /></div>
-                          {/* Step 3 */}
-                          <div className="cb-step">
-                            <span className="cb-step-icon cb-step-icon--teal">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                            </span>
-                            <span className="cb-step-label">Write brief</span>
-                          </div>
-                          <div className="cb-connector"><div className="cb-connector-line" /></div>
-                          {/* Step 4 */}
-                          <div className="cb-step">
-                            <span className="cb-step-icon cb-step-icon--red">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            </span>
-                            <span className="cb-step-label">Email stakeholders</span>
+
+                          {/* After — the win */}
+                          <div className="cb-card cb-card--after cb-card--anim" style={{ animationDelay: '0.75s' }}>
+                            <div className="cb-card-badge cb-card-badge--green">After</div>
+                            <div className="cb-card-stat">
+                              <span className="cb-card-number cb-card-number--green">4 sec</span>
+                              <span className="cb-card-unit">avg. response</span>
+                            </div>
+                            <div className="cb-card-detail">
+                              <span className="cb-card-icon cb-card-icon--green">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                              </span>
+                              <span className="cb-card-metric cb-card-metric--green">96% resolution rate</span>
+                            </div>
+                            <div className="cb-card-detail">
+                              <span className="cb-card-icon cb-card-icon--green">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                              </span>
+                              <span className="cb-card-metric cb-card-metric--green">24/7 instant support</span>
+                            </div>
                           </div>
                         </div>
                       </div>
 
-                      {/* ── Right: Chat preview ── */}
+                      {/* ── Right: Live chat demo ── */}
                       <div className="cb-panel cb-panel-right">
-                        <div className="wf-browser-chrome">
-                          <div className="wf-browser-dots">
-                            <span /><span /><span />
-                          </div>
+                        <div className="cb-live-header">
+                          <span className="cb-live-dot" />
+                          <span className="cb-live-text">Live on your website</span>
                         </div>
-                        <div className="wf-browser-body">
-                          {/* Skeleton lines */}
-                          <div className="wf-skeleton-line wf-skeleton-line--w70" />
-                          <div className="wf-skeleton-line wf-skeleton-line--w50" />
-                          <div className="wf-skeleton-row">
-                            <div className="wf-skeleton-block" />
-                            <div className="wf-skeleton-block" />
+                        <div className="cb-demo-site">
+                          {/* Faux site skeleton */}
+                          <div className="cb-site-nav">
+                            <div className="cb-site-logo" />
+                            <div className="cb-site-links">
+                              <div className="cb-site-link" />
+                              <div className="cb-site-link" />
+                              <div className="cb-site-link" />
+                            </div>
                           </div>
-                          <div className="wf-skeleton-line wf-skeleton-line--w60" />
-                          <div className="wf-skeleton-row">
-                            <div className="wf-skeleton-block" />
-                            <div className="wf-skeleton-block" />
+                          <div className="cb-site-hero">
+                            <div className="cb-site-hero-line cb-site-hero-line--lg" />
+                            <div className="cb-site-hero-line cb-site-hero-line--md" />
+                            <div className="cb-site-hero-line cb-site-hero-line--sm" />
+                          </div>
+                          <div className="cb-site-grid">
+                            <div className="cb-site-block" />
+                            <div className="cb-site-block" />
                           </div>
 
-                          {/* Chat widget – pops open from bottom-right */}
+                          {/* Chat widget — animated pop-in */}
                           <div className="cb-chat-widget">
-                            <div className="wf-chat-header">
-                              <span className="cb-chat-title">SUPPORT AGENT</span>
-                              <button className="wf-chat-minimize" aria-label="Minimize">—</button>
-                            </div>
-                            <div className="wf-chat-messages">
-                              <div className="wf-chat-msg wf-chat-msg--bot">
+                            <div className="cb-widget-bar">
+                              <div className="cb-widget-avatar-wrap">
                                 <span className="cb-chat-avatar">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                                 </span>
-                                <span>Hi! How can I help?</span>
+                                <span className="cb-widget-online" />
                               </div>
-                              <div className="wf-chat-msg wf-chat-msg--user">
+                              <div>
+                                <div className="cb-chat-title">Support Agent</div>
+                                <div className="cb-chat-status">Online · Typically replies instantly</div>
+                              </div>
+                            </div>
+                            <div className="cb-widget-messages">
+                              <div className="cb-msg cb-msg--bot cb-msg--anim" style={{ animationDelay: '0.6s' }}>
+                                <span>👋 Hi! How can I help you today?</span>
+                              </div>
+                              <div className="cb-msg cb-msg--user cb-msg--anim" style={{ animationDelay: '1.1s' }}>
                                 <span>What&apos;s your return policy?</span>
                               </div>
-                              <div className="wf-chat-msg wf-chat-msg--bot">
-                                <span className="cb-chat-avatar">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                                </span>
-                                <span>You can return items within 30 days!</span>
+                              <div className="cb-msg cb-msg--bot cb-msg--anim" style={{ animationDelay: '1.6s' }}>
+                                <span>You can return any item within 30 days for a full refund — no questions asked! 🎉</span>
+                              </div>
+                              <div className="cb-msg-meta cb-msg--anim" style={{ animationDelay: '1.8s' }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                <span>Answered in 3.2s from Knowledge Base</span>
                               </div>
                             </div>
-                            <div className="wf-chat-input">
-                              <input type="text" placeholder="Ask a question…" readOnly />
-                              <button className="wf-chat-send" aria-label="Send">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                            <div className="cb-widget-input">
+                              <input type="text" placeholder="Ask anything…" readOnly />
+                              <button className="cb-widget-send" aria-label="Send">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                               </button>
                             </div>
                           </div>
