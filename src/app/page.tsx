@@ -1,9 +1,163 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { Orb } from "@/components/ui/orb";
 import "./product-showcase.css";
 
 const TAB_DURATION = 5000; // ms per tab
+
+/* ─── Workflow Prompt (right panel) ─── */
+const PROMPT_EXAMPLES = [
+  {
+    label: "Lead qualification",
+    prompt: "Create an AI workflow that qualifies inbound leads by analyzing company size, industry, and budget, then updates HubSpot and schedules meetings with qualified prospects",
+  },
+  {
+    label: "Email outreach",
+    prompt: "Build an automated email sequence that sends personalized outreach via SendGrid, tracks opens and clicks, and automatically follows up with engaged recipients",
+  },
+  {
+    label: "CRM automation",
+    prompt: "Set up an intelligent pipeline that syncs lead data across Google Forms, Gemini AI scoring, and HubSpot CRM, with automated deal creation and task assignment",
+  },
+];
+
+const TRANSLATIONS: Record<string, string[]> = {
+  [PROMPT_EXAMPLES[0].prompt]: [
+    "Create an AI workflow that qualifies inbound leads by analyzing company size, industry, and budget, then updates HubSpot and schedules meetings with qualified prospects",
+    "(ES) Crear un flujo de IA que califique leads entrantes analizando tamaño de empresa, industria y presupuesto, luego actualice HubSpot y programe reuniones",
+    "(FR) Créer un workflow IA qui qualifie les prospects entrants en analysant la taille de l'entreprise, le secteur et le budget, puis met à jour HubSpot",
+    "(DE) Erstellen Sie einen KI-Workflow, der eingehende Leads nach Unternehmensgröße, Branche und Budget qualifiziert und HubSpot aktualisiert",
+    "(JP) 企業規模・業種・予算を分析してインバウンドリードを選別し、HubSpotを更新して商談を設定するAIワークフローを作成",
+    "(ZH) 创建AI工作流，通过分析公司规模、行业和预算来筛选潜在客户，然后更新HubSpot并安排会议",
+  ],
+  [PROMPT_EXAMPLES[1].prompt]: [
+    "Build an automated email sequence that sends personalized outreach via SendGrid, tracks opens and clicks, and automatically follows up with engaged recipients",
+    "(ES) Construir una secuencia de correo automatizada que envíe alcance personalizado vía SendGrid, rastree aperturas y clics, y haga seguimiento automático",
+    "(FR) Construire une séquence d'emails automatisée qui envoie des messages personnalisés via SendGrid, suit les ouvertures et clics, et relance automatiquement",
+    "(DE) Erstellen Sie eine automatisierte E-Mail-Sequenz, die personalisierte Nachrichten über SendGrid sendet, Öffnungen und Klicks verfolgt und automatisch nachfasst",
+    "(JP) SendGrid経由でパーソナライズされたメールを送信し、開封とクリックを追跡し、関心のある受信者に自動フォローアップするシーケンスを構築",
+    "(ZH) 构建自动化邮件序列，通过SendGrid发送个性化外联邮件，追踪打开和点击，并自动跟进感兴趣的收件人",
+  ],
+  [PROMPT_EXAMPLES[2].prompt]: [
+    "Set up an intelligent pipeline that syncs lead data across Google Forms, Gemini AI scoring, and HubSpot CRM, with automated deal creation and task assignment",
+    "(ES) Configurar un pipeline inteligente que sincronice datos de leads entre Google Forms, puntuación de Gemini IA y HubSpot CRM, con creación automática de negocios",
+    "(FR) Configurer un pipeline intelligent qui synchronise les données de leads entre Google Forms, le scoring Gemini IA et HubSpot CRM, avec création automatique de deals",
+    "(DE) Richten Sie eine intelligente Pipeline ein, die Lead-Daten zwischen Google Forms, Gemini-KI-Scoring und HubSpot CRM synchronisiert, mit automatischer Deal-Erstellung",
+    "(JP) Google Forms、Gemini AIスコアリング、HubSpot CRM間でリードデータを同期し、案件の自動作成とタスク割り当てを行うパイプラインを構築",
+    "(ZH) 设置智能管道，在Google Forms、Gemini AI评分和HubSpot CRM之间同步潜在客户数据，自动创建交易和分配任务",
+  ],
+};
+
+const LANG_FLAGS = ["🇺🇸", "🇪🇸", "🇫🇷", "🇩🇪", "🇯🇵", "🇨🇳"];
+const LANG_LABELS = ["English", "Español", "Français", "Deutsch", "日本語", "中文"];
+
+function WorkflowPrompt({ onPause, onDone }: { onPause?: (p: boolean) => void; onDone?: () => void }) {
+  const [input, setInput] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [displayText, setDisplayText] = useState("");
+  const [langIdx, setLangIdx] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const handleSubmit = (overrideText?: string) => {
+    const text = overrideText || input.trim() || PROMPT_EXAMPLES[0].prompt;
+    if (isTranslating) return;
+
+    const translations = TRANSLATIONS[text] || [
+      text,
+      `Crear un flujo de trabajo de IA que ${text.toLowerCase()}`,
+      `Créer un workflow IA qui ${text.toLowerCase()}`,
+      `Einen KI-Workflow erstellen, der ${text.toLowerCase()}`,
+      `${text}を実行するAIワークフローを作成`,
+      `创建AI工作流来${text.toLowerCase()}`,
+    ];
+
+    setIsTranslating(true);
+    onPause?.(true);
+    let idx = 0;
+    setDisplayText(translations[0]);
+    setLangIdx(0);
+
+    timerRef.current = setInterval(() => {
+      idx++;
+      if (idx < translations.length) {
+        setDisplayText(translations[idx]);
+        setLangIdx(idx);
+      } else {
+        // Done — show original text, stop, and trigger modal
+        clearInterval(timerRef.current!);
+        timerRef.current = null;
+        setDisplayText(text);
+        setIsTranslating(false);
+        setLangIdx(0);
+        onPause?.(false);
+        onDone?.();
+      }
+    }, 400);
+  };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  return (
+    <div className="wf-panel wf-panel-right wf-builder-panel">
+      <div className="wf-builder-idle">
+        <div className="wf-builder-sparkle">✦</div>
+        <p className="wf-builder-prompt-label">Describe your workflow</p>
+        <div className="wf-builder-input-wrap">
+          <textarea
+            className={`wf-builder-input${isTranslating ? " wf-builder-input--translating" : ""}`}
+            placeholder="Describe your workflow… e.g. 'Qualify inbound leads, score them with AI, and sync to CRM'"
+            value={isTranslating ? displayText : input}
+            onChange={(e) => !isTranslating && setInput(e.target.value)}
+            onFocus={() => onPause?.(true)}
+            onBlur={() => { if (!isTranslating) onPause?.(false); }}
+            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSubmit(); } }}
+            readOnly={isTranslating}
+            rows={3}
+          />
+          <button
+            className={`wf-builder-send${isTranslating ? " wf-builder-send--spin" : ""}`}
+            onClick={() => handleSubmit()}
+            aria-label="Generate"
+            disabled={isTranslating}
+          >
+            {isTranslating ? (
+              <span className="wf-builder-spinner" />
+            ) : (
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            )}
+          </button>
+        </div>
+        {/* Language label + flag dots during translation */}
+        {isTranslating && (
+          <div className="wf-translate-indicator">
+            <span className="wf-translate-lang-label" key={langIdx}>{LANG_FLAGS[langIdx]} {LANG_LABELS[langIdx]}</span>
+            <div className="wf-translate-dots">
+              {LANG_FLAGS.map((_, i) => (
+                <span key={i} className={`wf-translate-dot${i === langIdx ? " wf-translate-dot--active" : ""}`} />
+              ))}
+            </div>
+          </div>
+        )}
+        {!isTranslating && (
+          <div className="wf-builder-chips">
+            {PROMPT_EXAMPLES.map((ex) => (
+              <button key={ex.label} className="wf-builder-chip" onClick={() => { setInput(ex.prompt); handleSubmit(ex.prompt); }}>
+                {ex.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 
 /* ─── data ─── */
 const TABS = [
@@ -15,26 +169,12 @@ const TABS = [
 ];
 
 const VOICES = [
-  { id: "UgBBYS2sOqTuMpoF3BR0", name: "Mark", desc: "Natural Conversations", bg: "bg03" },
-  { id: "NOpBlnGInO9m6vDvFkFC", name: "Spuds Oxley", desc: "Wise and Approachable", bg: "bg04" },
-  { id: "EkK5I93UQWFDigLMpZcX", name: "James", desc: "Husky, Engaging and Bold", bg: "bg08" },
-  { id: "56AoDkrOh6qfVPDXZ7Pt", name: "Cassidy", desc: "Crisp, Direct and Clear", bg: "bg01" },
-  { id: "uju3wxzG5OhpWcoi3SMy", name: "Michael C. Vincent", desc: "Confident, Expressive", bg: "bg06" },
-  { id: "tnSpp4vdxKPjI9w0GnoV", name: "Hope", desc: "Upbeat and Clear", bg: "bg05" },
-  { id: "G17SuINrv2H9FC6nvetn", name: "Christopher", desc: "Gentle and Trustworthy", bg: "bg07" },
-  { id: "IRHApOXLvnW57QJPQH2P", name: "Adam", desc: "American, Dark and Tough", bg: "bg02" },
-  { id: "EiNlNiXeDU1pqqOPrYMO", name: "John Doe", desc: "Deep", bg: "bg03" },
-  { id: "1SM7GgM6IMuvQlz2BwM3", name: "Mark", desc: "Casual, Relaxed and Light", bg: "bg04" },
-  { id: "ZthjuvLPty3kTMaNKVKb", name: "Peter", desc: "", bg: "bg08" },
-  { id: "Z3R5wn05IrDiVCyEkUrK", name: "Arabella", desc: "Mysterious and Emotive", bg: "bg01" },
-  { id: "lxYfHSkYm1EzQzGhdbfc", name: "Jessica Anne Bogart", desc: "A VO Professional; now cloned!", bg: "bg06" },
-  { id: "e5WNhrdI30aXpS2RSGm1", name: "Ian Cartwell", desc: "Suspense and Mystery", bg: "bg05" },
-  { id: "yl2ZDV1MzN4HbQJbMihG", name: "Alex", desc: "Upbeat, Energetic and Clear", bg: "bg07" },
-  { id: "kqVT88a5QfII1HNAEPTJ", name: "Declan Sage", desc: "Wise and Captivating", bg: "bg02" },
-  { id: "NNl6r8mD7vthiJatiJt1", name: "Bradford", desc: "Expressive and Articulate", bg: "bg03" },
-  { id: "XjLkpWUlnhS8i7gGz3lZ", name: "David Castlemore", desc: "Newsreader and Educator", bg: "bg04" },
-  { id: "j9jfwdrw7BRfcR43Qohk", name: "Frederick Surrey", desc: "Smooth and Velvety", bg: "bg08" },
-  { id: "MFZUKuGQUsGJPQjTS4wC", name: "Jon", desc: "Warm & Grounded Storyteller", bg: "bg01" },
+  { id: "alloy", name: "Zara", desc: "Chill & Effortless", bg: "bg05", audio: "/audio/voices/alloy.wav" },
+  { id: "echo", name: "Kai", desc: "Deep & Iconic", bg: "bg02", audio: "/audio/voices/echo.wav" },
+  { id: "fable", name: "Luna", desc: "Soft & Magnetic", bg: "bg04", audio: "/audio/voices/fable.wav" },
+  { id: "onyx", name: "Renzo", desc: "Bold & Cinematic", bg: "bg08", audio: "/audio/voices/onyx.wav" },
+  { id: "nova", name: "Aria", desc: "Sleek & Vibey", bg: "bg06", audio: "/audio/voices/nova.wav" },
+  { id: "shimmer", name: "Jett", desc: "Hype & Electric", bg: "bg01", audio: "/audio/voices/shimmer.wav" },
 ];
 
 const BG_COLORS: Record<string, string> = {
@@ -48,27 +188,31 @@ const BG_COLORS: Record<string, string> = {
   bg08: "#c4cfe8",
 };
 
-const DEFAULT_TEXT =
-  'In the ancient land of Eldoria, where skies shimmered and forests, whispered secrets to the wind, lived a dragon named Zephyros. [sarcastically] Not the "burn it all down" kind... [giggles] but he was gentle, wise, with eyes like old stars. [whispers] Even the birds fell silent when he passed.';
-
-function renderAnnotatedText(raw: string) {
-  const parts = raw.split(/(\[[^\]]+\])/g);
-  return parts.map((p, i) =>
-    p.startsWith("[") ? (
-      <span key={i} className="text-annotation">
-        {p}
-      </span>
-    ) : (
-      <span key={i}>{p}</span>
-    )
-  );
-}
-
 export default function ProductShowcase() {
   const [activeTabIdx, setActiveTabIdx] = useState(0);
   const [selectedVoice, setSelectedVoice] = useState(VOICES[0].id);
-  const [text, setText] = useState(DEFAULT_TEXT);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingVoice, setPlayingVoice] = useState<string | null>(null);
+  const [orbAgentState, setOrbAgentState] = useState<"thinking" | "listening" | "talking" | null>(null);
+
+  const handlePreview = (voiceId: string, audioSrc: string) => {
+    if (playingVoice === voiceId && audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+      setPlayingVoice(null);
+      return;
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    const audio = new Audio(audioSrc);
+    audioRef.current = audio;
+    setPlayingVoice(voiceId);
+    audio.play();
+    audio.onended = () => setPlayingVoice(null);
+  };
 
   // Auto-rotation with refs to avoid stale closures
   const [progress, setProgress] = useState(0);
@@ -78,10 +222,24 @@ export default function ProductShowcase() {
   const activeIdxRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const lastTickRef = useRef(performance.now());
+  const showModalRef = useRef(false);
+  useEffect(() => { showModalRef.current = showSignupModal; }, [showSignupModal]);
 
   // Keep refs in sync
-  useEffect(() => { pausedRef.current = paused; }, [paused]);
+  useEffect(() => { pausedRef.current = paused || playingVoice !== null; }, [paused, playingVoice]);
   useEffect(() => { activeIdxRef.current = activeTabIdx; }, [activeTabIdx]);
+
+  // Cycle the orb through idle → listening → thinking → talking
+  useEffect(() => {
+    const states: ("thinking" | "listening" | "talking" | null)[] = [null, "listening", "thinking", "talking"];
+    let idx = 0;
+    const interval = setInterval(() => {
+      if (paused) return;
+      idx = (idx + 1) % states.length;
+      setOrbAgentState(states[idx]);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [paused]);
 
   // Single rAF loop — no intervals, no race conditions
   useEffect(() => {
@@ -91,7 +249,7 @@ export default function ProductShowcase() {
       const dt = now - lastTickRef.current;
       lastTickRef.current = now;
 
-      if (!pausedRef.current) {
+      if (!pausedRef.current && !showModalRef.current) {
         const increment = (dt / TAB_DURATION) * 100;
         progressRef.current += increment;
 
@@ -131,6 +289,19 @@ export default function ProductShowcase() {
 
   return (
     <div className="showcase-page">
+      {/* ── Full-page signup modal ── */}
+      {showSignupModal && (
+        <div className="signup-modal-overlay" onClick={() => setShowSignupModal(false)}>
+          <div className="signup-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="signup-modal-close" onClick={() => setShowSignupModal(false)} aria-label="Close">✕</button>
+            <h2 className="signup-modal-title">Your workflow is ready</h2>
+            <a className="signup-modal-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">
+              Deploy Now
+            </a>
+          </div>
+        </div>
+      )}
+
       <div className="showcase-container">
         <script
           id="tts-structured-data"
@@ -205,8 +376,8 @@ export default function ProductShowcase() {
             {activeTab === "speech" && (
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
-                  <p className="product-title" aria-hidden="true">Text to Speech</p>
-                  <p className="product-subtitle">Transform text into lifelike speech across 70+ languages</p>
+                  <p className="product-title" aria-hidden="true">Voice Agents</p>
+                  <p className="product-subtitle">Deploy AI voice agents that handle calls, answer questions & resolve tickets — in 6 premium voices</p>
                 </div>
 
                 <div className="main-content-area">
@@ -215,20 +386,13 @@ export default function ProductShowcase() {
                       <div className="card-divider" />
                       <div className="card-split">
                         {/* ── Voice list ── */}
-                        <div className="voice-panel">
+                        <div className="voice-panel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
                           <div className="voice-list" role="radiogroup" aria-label="Voice">
-                            {VOICES.map((voice, idx) => {
+                            {VOICES.map((voice) => {
                               const isSelected = voice.id === selectedVoice;
-                              const isGroupFirst = idx % 5 === 0;
-                              const isGroupLast = idx % 5 === 4;
                               return (
                                 <div key={voice.id} className="voice-item" data-selected={isSelected || undefined}>
-                                  <label
-                                    style={{
-                                      paddingTop: isGroupFirst ? "0.6875rem" : undefined,
-                                      paddingBottom: isGroupLast ? "0.6875rem" : undefined,
-                                    }}
-                                  >
+                                  <label>
                                     <span className="sr-only">
                                       <input
                                         type="radio"
@@ -266,73 +430,61 @@ export default function ProductShowcase() {
                                   </label>
                                   <button
                                     type="button"
-                                    className="voice-preview-btn"
-                                    aria-label="Preview"
-                                    style={{ top: isGroupFirst ? "1.0625rem" : "0.375rem" }}
+                                    className={`voice-preview-btn${playingVoice === voice.id ? ' voice-preview-btn--playing' : ''}`}
+                                    aria-label={playingVoice === voice.id ? 'Stop' : 'Preview'}
+                                    onClick={() => handlePreview(voice.id, voice.audio)}
                                   >
-                                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                                      <path fill="currentColor" d="M9.244 2.368C7.414 1.184 5 2.497 5 4.676v14.648c0 2.18 2.414 3.493 4.244 2.309l11.318-7.324c1.675-1.084 1.675-3.534 0-4.618z" />
-                                    </svg>
+                                    {playingVoice === voice.id ? (
+                                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <rect x="6" y="4" width="4" height="16" rx="1" fill="currentColor" />
+                                        <rect x="14" y="4" width="4" height="16" rx="1" fill="currentColor" />
+                                      </svg>
+                                    ) : (
+                                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path fill="currentColor" d="M9.244 2.368C7.414 1.184 5 2.497 5 4.676v14.648c0 2.18 2.414 3.493 4.244 2.309l11.318-7.324c1.675-1.084 1.675-3.534 0-4.618z" />
+                                      </svg>
+                                    )}
                                   </button>
                                 </div>
                               );
                             })}
                           </div>
-
-                          <div className="voice-panel-footer">
-                            <button type="button" className="edit-text-btn">
-                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Edit text</span>
-                            </button>
-                          </div>
                         </div>
 
-                        {/* ── Text editor panel ── */}
-                        <div className="text-panel" tabIndex={-1}>
-                          <button type="button" className="back-btn">Back</button>
-                          <div className="text-panel-border" />
-
-                          <div className="text-scroll">
-                            <div className="text-label-bar">
-                              <p>
-                                <span style={{ display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                                  Enter your own text
-                                </span>
-                              </p>
+                        {/* ── Orb Call Panel ── */}
+                        <div className="orb-call-panel" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+                          <div className="orb-call-inner">
+                            {/* Voice name + status */}
+                            <div className="orb-voice-label">
+                              <span className="orb-voice-name">{selectedVoiceData.name}</span>
+                              <span className="orb-voice-status">
+                                {orbAgentState === "talking" ? "Speaking…" : orbAgentState === "listening" ? "Listening…" : orbAgentState === "thinking" ? "Thinking…" : "Ready to talk"}
+                              </span>
                             </div>
-                            <div className="text-content-wrap">
-                              <div className="text-display" style={{ whiteSpace: "pre-wrap", overflowWrap: "break-word" }}>
-                                {renderAnnotatedText(text)}
-                                {"\u200B"}
-                              </div>
-                              <textarea
-                                ref={textareaRef}
-                                className="text-textarea"
-                                spellCheck={false}
-                                aria-label="Enter your text here, ElevenLabs AI Voice Generator will read it for you"
-                                maxLength={1000}
-                                value={text}
-                                onChange={(e) => setText(e.target.value)}
+
+                            {/* The Orb */}
+                            <div className="orb-container">
+                              <Orb
+                                colors={["#ffffff", "#a0a0a0"]}
+                                agentState={orbAgentState}
+                                seed={42}
                               />
                             </div>
-                            <div className="text-bottom-fade" />
-                          </div>
 
-                          <div className="bottom-toolbar">
-                            <div className="voice-select-mobile">
-                              <div style={{ minWidth: 0 }}>
-                                <button type="button" className="voice-select-btn" aria-label="Voice">
-                                  <span style={{ minWidth: 0 }}>
-                                    <div style={{ position: "relative", minWidth: 0, display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                                      <div className="voice-select-avatar" style={{ background: BG_COLORS[selectedVoiceData.bg] ?? "#e5e7eb" }} />
-                                      <div className="voice-select-name">{selectedVoiceData.name}</div>
-                                    </div>
-                                  </span>
-                                </button>
-                              </div>
+                            {/* Call controls */}
+                            <div className="orb-controls">
+                              <button className="orb-ctrl-btn orb-ctrl-btn--mic" aria-label="Microphone">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+                              </button>
+                              <button className="orb-ctrl-btn orb-ctrl-btn--call" aria-label="Start call">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M5.723 3C4.248 3 2.927 4.206 3.097 5.796c.251 2.36.993 4.662 2.19 6.723a17.1 17.1 0 006.195 6.195c2.075 1.205 4.348 1.913 6.69 2.172 1.598.177 2.829-1.143 2.829-2.636v-1.753a2.75 2.75 0 00-1.974-2.639l-1.682-.495a2.69 2.69 0 00-2.702.719c-.377.392-.914.452-1.285.212a12.3 12.3 0 01-3.652-3.651c-.24-.372-.18-.908.213-1.285a2.69 2.69 0 00.718-2.702l-.494-1.682A2.75 2.75 0 007.504 3z"/></svg>
+                              </button>
+                              <button className="orb-ctrl-btn orb-ctrl-btn--end" aria-label="End call">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                              </button>
                             </div>
 
-                            <button type="button" className="play-btn" aria-label="Play">Play</button>
-                            <audio className="hidden" />
+                            <div className="orb-caption">Click the phone to start a voice call with {selectedVoiceData.name}</div>
                           </div>
                         </div>
                       </div>
@@ -342,7 +494,7 @@ export default function ProductShowcase() {
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Sign up</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Sign up</a>
                 </div>
               </div>
             )}
@@ -528,7 +680,7 @@ export default function ProductShowcase() {
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Deploy AI Crew</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Deploy AI Crew</a>
                 </div>
               </div>
             )}
@@ -549,9 +701,8 @@ export default function ProductShowcase() {
                         <div className="wf-flow">
                           {/* Step 1 — Trigger */}
                           <div className="wf-step wf-step-animated" style={{ animationDelay: '0s' }}>
-                            <span className="wf-step-icon wf-step-icon--orange">
-                              {/* Zap / trigger icon */}
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <span className="wf-step-logo">
+                              <img src="/logos/googleform.svg" alt="Google Forms" width="18" height="18" />
                             </span>
                             <span className="wf-step-label">New lead from Form</span>
                             <span className="wf-step-badge wf-step-badge--trigger">Trigger</span>
@@ -565,9 +716,8 @@ export default function ProductShowcase() {
                           </div>
                           {/* Step 2 — AI Qualify */}
                           <div className="wf-step wf-step-animated" style={{ animationDelay: '0.5s' }}>
-                            <span className="wf-step-icon wf-step-icon--purple">
-                              {/* Brain / AI icon */}
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a4 4 0 014 4c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2a4 4 0 014-4z"/><path d="M8 8v1a4 4 0 008 0V8"/><path d="M6 13a6 6 0 0012 0"/><path d="M9 22h6"/><path d="M12 18v4"/></svg>
+                            <span className="wf-step-logo">
+                              <img src="/logos/gemini.svg" alt="Gemini" width="18" height="18" />
                             </span>
                             <span className="wf-step-label">AI Qualify &amp; Score</span>
                             <span className="wf-step-badge wf-step-badge--ai">Gemini</span>
@@ -582,9 +732,8 @@ export default function ProductShowcase() {
                           </div>
                           {/* Step 3 — Send Email */}
                           <div className="wf-step wf-step-animated" style={{ animationDelay: '1.05s' }}>
-                            <span className="wf-step-icon wf-step-icon--teal">
-                              {/* Mail icon */}
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 7L2 7"/></svg>
+                            <span className="wf-step-logo">
+                              <img src="/logos/sendgrid.png" alt="SendGrid" width="18" height="18" />
                             </span>
                             <span className="wf-step-label">Send outreach email</span>
                             <span className="wf-step-badge wf-step-badge--action">SendGrid</span>
@@ -599,12 +748,11 @@ export default function ProductShowcase() {
                           </div>
                           {/* Step 4 — Follow-up */}
                           <div className="wf-step wf-step-animated" style={{ animationDelay: '1.6s' }}>
-                            <span className="wf-step-icon wf-step-icon--blue">
-                              {/* Repeat / follow-up icon */}
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                            <span className="wf-step-logo">
+                              <img src="/logos/gmail.svg" alt="Gmail" width="18" height="18" />
                             </span>
                             <span className="wf-step-label">Auto follow-up</span>
-                            <span className="wf-step-badge wf-step-badge--action">×5</span>
+                            <span className="wf-step-badge wf-step-badge--action">Gmail</span>
                           </div>
                           {/* Arrow */}
                           <div className="wf-arrow" style={{ animationDelay: '1.9s' }}>
@@ -615,9 +763,8 @@ export default function ProductShowcase() {
                           </div>
                           {/* Step 5 — CRM */}
                           <div className="wf-step wf-step-animated" style={{ animationDelay: '2.1s' }}>
-                            <span className="wf-step-icon wf-step-icon--green">
-                              {/* Check-circle icon */}
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            <span className="wf-step-logo">
+                              <img src="/logos/hubspot.svg" alt="HubSpot" width="18" height="18" />
                             </span>
                             <span className="wf-step-label">Create deal in CRM</span>
                             <span className="wf-step-badge wf-step-badge--action">HubSpot</span>
@@ -625,80 +772,14 @@ export default function ProductShowcase() {
                         </div>
                       </div>
 
-                      {/* ── Right: Lead scoring dashboard ── */}
-                      <div className="wf-panel wf-panel-right">
-                        <div className="wf-dash-header">
-                          <span className="wf-dash-title">Lead Pipeline</span>
-                          <span className="wf-dash-live">● Live</span>
-                        </div>
-                        <div className="wf-dash-body">
-                          {/* Lead row 1 */}
-                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '0.6s' }}>
-                            <div className="wf-lead-info">
-                              <span className="wf-lead-name">Sarah Chen</span>
-                              <span className="wf-lead-company">Acme Corp</span>
-                            </div>
-                            <div className="wf-lead-meta">
-                              <span className="wf-lead-score wf-lead-score--high">92</span>
-                              <span className="wf-lead-status wf-lead-status--qualified">Qualified</span>
-                            </div>
-                          </div>
-                          {/* Lead row 2 */}
-                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '0.9s' }}>
-                            <div className="wf-lead-info">
-                              <span className="wf-lead-name">James Miller</span>
-                              <span className="wf-lead-company">TechFlow Inc</span>
-                            </div>
-                            <div className="wf-lead-meta">
-                              <span className="wf-lead-score wf-lead-score--high">85</span>
-                              <span className="wf-lead-status wf-lead-status--emailed">Email sent</span>
-                            </div>
-                          </div>
-                          {/* Lead row 3 */}
-                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '1.2s' }}>
-                            <div className="wf-lead-info">
-                              <span className="wf-lead-name">Priya Sharma</span>
-                              <span className="wf-lead-company">DataBridge</span>
-                            </div>
-                            <div className="wf-lead-meta">
-                              <span className="wf-lead-score wf-lead-score--med">61</span>
-                              <span className="wf-lead-status wf-lead-status--review">In review</span>
-                            </div>
-                          </div>
-                          {/* Lead row 4 */}
-                          <div className="wf-lead wf-lead-animated" style={{ animationDelay: '1.5s' }}>
-                            <div className="wf-lead-info">
-                              <span className="wf-lead-name">Tom Bradley</span>
-                              <span className="wf-lead-company">NovaPay</span>
-                            </div>
-                            <div className="wf-lead-meta">
-                              <span className="wf-lead-score wf-lead-score--low">34</span>
-                              <span className="wf-lead-status wf-lead-status--rejected">Not qualified</span>
-                            </div>
-                          </div>
-                          {/* Stats row */}
-                          <div className="wf-dash-stats wf-lead-animated" style={{ animationDelay: '1.8s' }}>
-                            <div className="wf-dash-stat">
-                              <span className="wf-dash-stat-val">127</span>
-                              <span className="wf-dash-stat-lbl">Leads today</span>
-                            </div>
-                            <div className="wf-dash-stat">
-                              <span className="wf-dash-stat-val">82%</span>
-                              <span className="wf-dash-stat-lbl">Auto-qualified</span>
-                            </div>
-                            <div className="wf-dash-stat">
-                              <span className="wf-dash-stat-val">3.2×</span>
-                              <span className="wf-dash-stat-lbl">Faster close</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      {/* ── Right: language-cycling prompt ── */}
+                      <WorkflowPrompt onPause={setPaused} onDone={() => setShowSignupModal(true)} />
                     </div>
                   </div>
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Sign up</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Sign up</a>
                 </div>
               </div>
             )}
@@ -737,7 +818,7 @@ export default function ProductShowcase() {
                             <div className="cb-transform-line" />
                             <div className="cb-transform-pill">
                               <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                              <span>AI activated</span>
+                              <span>SpinaBot activated</span>
                             </div>
                             <div className="cb-transform-line" />
                           </div>
@@ -834,7 +915,7 @@ export default function ProductShowcase() {
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Sign up</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Sign up</a>
                 </div>
               </div>
             )}
@@ -903,7 +984,7 @@ export default function ProductShowcase() {
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Sign up</a>
+                  <a className="cta-btn" href="https://dashboard.spinabot.com" target="_blank" rel="noopener noreferrer">Sign up</a>
                 </div>
               </div>
             )}

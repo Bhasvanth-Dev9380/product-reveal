@@ -14,9 +14,6 @@ importers:
       '@react-three/fiber':
         specifier: ^9.5.0
         version: 9.5.0(@types/react@19.2.14)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(three@0.182.0)
-      '@types/three':
-        specifier: ^0.182.0
-        version: 0.182.0
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -60,6 +57,9 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.2.3(@types/react@19.2.14)
+      '@types/three':
+        specifier: ^0.182.0
+        version: 0.182.0
       eslint:
         specifier: ^9
         version: 9.39.2(jiti@2.6.1)
