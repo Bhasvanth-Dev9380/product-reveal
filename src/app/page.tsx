@@ -280,19 +280,8 @@ export default function ProductShowcase() {
                           </div>
 
                           <div className="voice-panel-footer">
-                            <a className="explore-link" href="#">Explore 10,000+ voices</a>
                             <button type="button" className="edit-text-btn">
                               <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Edit text</span>
-                            </button>
-                            <button type="button" className="nav-btn nav-btn-prev" aria-label="Previous" disabled>
-                              <svg fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="m13.586 16-3.293-3.293a1 1 0 0 1 0-1.414L13.586 8" />
-                              </svg>
-                            </button>
-                            <button type="button" className="nav-btn nav-btn-next" aria-label="Next">
-                              <svg fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="m10 16 3.293-3.293a1 1 0 0 0 0-1.414L10 8" />
-                              </svg>
                             </button>
                           </div>
                         </div>
@@ -329,18 +318,6 @@ export default function ProductShowcase() {
                           </div>
 
                           <div className="bottom-toolbar">
-                            <button type="button" className="lang-select-btn" aria-label="Language">
-                              <span style={{ minWidth: 0 }}>
-                                <div style={{ position: "relative", minWidth: 0, display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                                  <img alt="" className="lang-flag" src="https://eleven-public-cdn.elevenlabs.io/images/flags/circle-flags/us.svg" />
-                                  <div className="lang-name">English</div>
-                                </div>
-                              </span>
-                              <svg viewBox="0 0 24 24" fill="none" className="lang-chevron" aria-hidden="true">
-                                <path d="M8 10L11.2929 13.2929C11.6834 13.6834 12.3166 13.6834 12.7071 13.2929L16 10" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                            </button>
-
                             <div className="voice-select-mobile">
                               <div style={{ minWidth: 0 }}>
                                 <button type="button" className="voice-select-btn" aria-label="Voice">
@@ -350,9 +327,6 @@ export default function ProductShowcase() {
                                       <div className="voice-select-name">{selectedVoiceData.name}</div>
                                     </div>
                                   </span>
-                                  <svg viewBox="0 0 24 24" fill="none" className="lang-chevron" aria-hidden="true">
-                                    <path d="M8 10L11.2929 13.2929C11.6834 13.6834 12.3166 13.6834 12.7071 13.2929L16 10" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" />
-                                  </svg>
                                 </button>
                               </div>
                             </div>
@@ -363,17 +337,6 @@ export default function ProductShowcase() {
                         </div>
                       </div>
 
-                      {/* Mobile explore strip */}
-                      <div className="mobile-explore-strip">
-                        <div className="mobile-explore-inner">
-                          <div style={{ minWidth: "100%", flex: "none", display: "flex", alignItems: "center", gap: "0.375rem", width: "max-content", opacity: 1 }}>
-                            <a className="mobile-explore-link" href="#">
-                              Explore 10,000+ voices
-                              <span style={{ position: "absolute", inset: 0 }} />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -736,33 +699,56 @@ export default function ProductShowcase() {
                         </div>
                       </div>
 
-                      {/* ── Right: Analyzed report preview ── */}
+                      {/* ── Right: Chat preview ── */}
                       <div className="cb-panel cb-panel-right">
-                        {/* Badge */}
-                        <div className="cb-badge-wrap">
-                          <div className="cb-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.09 6.26L20.18 9l-5 4.27L16.82 20 12 16.9 7.18 20l1.64-6.73L3.82 9l6.09-.74z"/></svg>
-                            Analyzed &apos;Q4 Report&apos;
+                        <div className="wf-browser-chrome">
+                          <div className="wf-browser-dots">
+                            <span /><span /><span />
                           </div>
                         </div>
-                        {/* Document card */}
-                        <div className="cb-doc-card">
-                          {/* Header */}
-                          <div className="cb-doc-header">
-                            <div className="cb-doc-avatar">
-                              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                            </div>
-                            <div>
-                              <div className="cb-doc-title">Investor Update</div>
-                              <div className="cb-doc-subtitle">We&apos;re ending the year on a positive trend.</div>
-                            </div>
+                        <div className="wf-browser-body">
+                          {/* Skeleton lines */}
+                          <div className="wf-skeleton-line wf-skeleton-line--w70" />
+                          <div className="wf-skeleton-line wf-skeleton-line--w50" />
+                          <div className="wf-skeleton-row">
+                            <div className="wf-skeleton-block" />
+                            <div className="wf-skeleton-block" />
                           </div>
-                          {/* Body */}
-                          <div className="cb-doc-body">
-                            <p className="cb-doc-label">TL;DR:</p>
-                            <p className="cb-doc-text">Q4 was our strongest quarter yet. ACME achieved record sales growth as demand for AI-powered climate systems surged.</p>
-                            <p className="cb-doc-text cb-doc-text--faded">We closed the year profitably, expanded our customer base, and are now ramping up hiring across growth, engineering, and partnerships to meet accelerating demand.</p>
-                            <p className="cb-doc-footer">Q4 2025 Investor Update</p>
+                          <div className="wf-skeleton-line wf-skeleton-line--w60" />
+                          <div className="wf-skeleton-row">
+                            <div className="wf-skeleton-block" />
+                            <div className="wf-skeleton-block" />
+                          </div>
+
+                          {/* Chat widget */}
+                          <div className="wf-chat-widget">
+                            <div className="wf-chat-header">
+                              <span className="wf-chat-title">SUPPORT AGENT</span>
+                              <button className="wf-chat-minimize" aria-label="Minimize">—</button>
+                            </div>
+                            <div className="wf-chat-messages">
+                              <div className="wf-chat-msg wf-chat-msg--bot">
+                                <span className="wf-chat-avatar">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </span>
+                                <span>Hi! How can I help?</span>
+                              </div>
+                              <div className="wf-chat-msg wf-chat-msg--user">
+                                <span>What&apos;s your return policy?</span>
+                              </div>
+                              <div className="wf-chat-msg wf-chat-msg--bot">
+                                <span className="wf-chat-avatar">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                                </span>
+                                <span>You can return your items within 30 days!</span>
+                              </div>
+                            </div>
+                            <div className="wf-chat-input">
+                              <input type="text" placeholder="Ask" readOnly />
+                              <button className="wf-chat-send" aria-label="Send">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
