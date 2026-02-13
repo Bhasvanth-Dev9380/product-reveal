@@ -720,15 +720,15 @@ export default function ProductShowcase() {
                             <div className="wf-skeleton-block" />
                           </div>
 
-                          {/* Chat widget */}
-                          <div className="wf-chat-widget">
+                          {/* Chat widget – pops open from bottom-right */}
+                          <div className="cb-chat-widget">
                             <div className="wf-chat-header">
-                              <span className="wf-chat-title">SUPPORT AGENT</span>
+                              <span className="cb-chat-title">SUPPORT AGENT</span>
                               <button className="wf-chat-minimize" aria-label="Minimize">—</button>
                             </div>
                             <div className="wf-chat-messages">
                               <div className="wf-chat-msg wf-chat-msg--bot">
-                                <span className="wf-chat-avatar">
+                                <span className="cb-chat-avatar">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                                 </span>
                                 <span>Hi! How can I help?</span>
@@ -737,14 +737,14 @@ export default function ProductShowcase() {
                                 <span>What&apos;s your return policy?</span>
                               </div>
                               <div className="wf-chat-msg wf-chat-msg--bot">
-                                <span className="wf-chat-avatar">
+                                <span className="cb-chat-avatar">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
                                 </span>
-                                <span>You can return your items within 30 days!</span>
+                                <span>You can return items within 30 days!</span>
                               </div>
                             </div>
                             <div className="wf-chat-input">
-                              <input type="text" placeholder="Ask" readOnly />
+                              <input type="text" placeholder="Ask a question…" readOnly />
                               <button className="wf-chat-send" aria-label="Send">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
                               </button>

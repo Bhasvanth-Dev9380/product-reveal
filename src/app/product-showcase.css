@@ -2310,18 +2310,18 @@
   box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.06);
 }
 
-/* Left panel: warm cream */
+/* Left panel: warm golden cream */
 .cb-panel-left {
-  background: #fdf6e3;
+  background: #f9f0d8;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 2rem 2.5rem;
 }
 
-/* Right panel: light warm */
+/* Right panel: light warm cream */
 .cb-panel-right {
-  background: #faf5ee;
+  background: #faf8f2;
   display: flex;
   flex-direction: column;
 }
@@ -2395,6 +2395,75 @@
   opacity: 0.4;
 }
 
+/* ── Chatbot chat widget – animated pop-open ── */
+@keyframes cb-chat-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cb-chat-widget {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  top: 0.25rem;
+  width: 14rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.10),
+    0 0 0 0.5px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform-origin: bottom right;
+  animation: cb-chat-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+}
+
+.cb-chat-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #b45309;
+}
+
+.cb-chat-avatar {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 9999px;
+  background: #d97706;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.0625rem;
+}
+
+/* Warm overrides for skeleton inside chatbot panel */
+.cb-panel-right .wf-browser-dots span {
+  background: rgba(180, 83, 9, 0.18);
+}
+.cb-panel-right .wf-skeleton-line {
+  background: rgba(180, 83, 9, 0.07);
+}
+.cb-panel-right .wf-skeleton-block {
+  background: rgba(180, 83, 9, 0.04);
+}
+.cb-panel-right .wf-chat-msg--user span {
+  background: #fef3c7;
+  color: #78350f;
+}
+
 /* ── Right panel content ── */
 .cb-badge-wrap {
   display: flex;
@@ -2421,7 +2490,7 @@
     0 1px 3px rgba(0, 0, 0, 0.06),
     0 0 0 0.5px rgba(0, 0, 0, 0.04);
   width: 100%;
-  max-width: 18rem;
+  max-width: 22rem;
   overflow: hidden;
   flex: 1;
   display: flex;
@@ -2471,15 +2540,15 @@
 .cb-doc-label {
   font-size: 0.8125rem;
   font-weight: 700;
-  color: #1c1917;
-  margin-bottom: 0.25rem;
+  color: #292524;
+  margin-bottom: 0.375rem;
 }
 
 .cb-doc-text {
   font-size: 0.75rem;
-  line-height: 1.5;
-  color: #44403c;
-  margin-bottom: 0.625rem;
+  line-height: 1.55;
+  color: #57534e;
+  margin-bottom: 0.5rem;
 }
 
 .cb-doc-text--faded {
