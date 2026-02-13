@@ -389,12 +389,13 @@ export default function ProductShowcase() {
               <div className="tab-panel-contents" role="tabpanel">
                 <div className="product-desc">
                   <p className="product-title" aria-hidden="true">AI Crew</p>
-                  <p className="product-subtitle">Collaborate with your AI-powered meeting room</p>
+                  <p className="product-subtitle">Build a team of AI agents that join standups, discuss tasks, and execute work — with you always in the loop</p>
                 </div>
 
                 <div className="main-content-area" style={{ opacity: 1 }}>
                   <div className="main-content-inner">
                     <div className="mt-card">
+
                       {/* ── Header ── */}
                       <div className="mt-header">
                         <div className="mt-header-left">
@@ -402,13 +403,13 @@ export default function ProductShowcase() {
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg>
                           </button>
                           <div>
-                            <div className="mt-room-title">Project Reporting – Week 1</div>
-                            <div className="mt-room-sub">George&apos;s Meeting Room</div>
+                            <div className="mt-room-title">Daily Standup – Sprint 14</div>
+                            <div className="mt-room-sub">Zoom &bull; 4 AI Agents + You</div>
                           </div>
                         </div>
                         <div className="mt-header-right">
                           <div className="mt-join-notif">
-                            <span><strong>Drew Bieber</strong> wants to join the meeting</span>
+                            <span><strong>Ava (Scrum Master)</strong> wants to share screen</span>
                             <button className="mt-notif-btn mt-notif-btn--reject" aria-label="Reject">✕</button>
                             <button className="mt-notif-btn mt-notif-btn--accept" aria-label="Accept">✓</button>
                           </div>
@@ -417,25 +418,31 @@ export default function ProductShowcase() {
 
                       {/* ── Body split ── */}
                       <div className="mt-body">
-                        {/* Left: Video area */}
+
+                        {/* Left: Main video area */}
                         <div className="mt-video-area">
                           <div className="mt-video-main">
-                            {/* Placeholder for video */}
+                            {/* Meeting background */}
                             <div className="mt-video-bg" />
-                            {/* You badge */}
-                            <div className="mt-you-badge"><span className="mt-you-avatar">G</span> You</div>
+                            {/* Current speaker badge */}
+                            <div className="mt-you-badge"><span className="mt-you-avatar">A</span> Ava – Scrum Master</div>
                             {/* Recording indicator */}
                             <div className="mt-recording">
                               <span className="mt-rec-dot" />
                               Recording in Progress....
                               <div className="mt-layout-btns">
-                                <button className="mt-layout-btn" aria-label="Layout 1">
+                                <button className="mt-layout-btn" aria-label="Grid layout">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
                                 </button>
-                                <button className="mt-layout-btn" aria-label="Layout 2">
+                                <button className="mt-layout-btn" aria-label="Stack layout">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="8" rx="1"/><rect x="3" y="13" width="18" height="8" rx="1"/></svg>
                                 </button>
                               </div>
+                            </div>
+                            {/* Center: large agent avatar */}
+                            <div className="mt-main-agent-avatar">
+                              <img src="/crew/1.png" alt="Ava" className="mt-main-agent-img" />
+                              <div className="mt-speaking-ring" />
                             </div>
                             {/* Bottom controls */}
                             <div className="mt-controls">
@@ -458,34 +465,40 @@ export default function ProductShowcase() {
                                 <svg width="20" height="16" viewBox="0 0 20 16"><rect x="1" y="4" width="2" height="8" rx="1" fill="#fff"/><rect x="5" y="2" width="2" height="12" rx="1" fill="#fff"/><rect x="9" y="5" width="2" height="6" rx="1" fill="#fff"/><rect x="13" y="1" width="2" height="14" rx="1" fill="#fff"/><rect x="17" y="6" width="2" height="4" rx="1" fill="#fff"/></svg>
                               </div>
                               <span className="mt-subtitle-label">CC/Subtitles</span>
-                              <span className="mt-subtitle-text">Hi guys thank you so much for coming – uhh been a long time no...</span>
+                              <span className="mt-subtitle-text">Good morning team – let&apos;s go through yesterday&apos;s blockers and assign today&apos;s tasks...</span>
                               <button className="mt-subtitle-settings" aria-label="Settings">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
                               </button>
                             </div>
                           </div>
-                          {/* Participant strip */}
+                          {/* Participant strip — agents */}
                           <div className="mt-participants">
                             <div className="mt-participant">
-                              <div className="mt-participant-thumb mt-participant-thumb--1" />
+                              <div className="mt-participant-thumb mt-participant-thumb--meet1">
+                                <img src="/crew/2.png" alt="Max" className="mt-thumb-img" />
+                              </div>
                               <span className="mt-participant-mic">
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"/><path d="M19 11a7 7 0 01-14 0"/></svg>
                               </span>
-                              <span className="mt-participant-name">Alicia Padlock</span>
+                              <span className="mt-participant-name">Max &bull; Developer</span>
                             </div>
                             <div className="mt-participant">
-                              <div className="mt-participant-thumb mt-participant-thumb--2" />
+                              <div className="mt-participant-thumb mt-participant-thumb--meet2">
+                                <img src="/crew/3.png" alt="Priya" className="mt-thumb-img" />
+                              </div>
                               <span className="mt-participant-mic">
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"/><path d="M19 11a7 7 0 01-14 0"/></svg>
                               </span>
-                              <span className="mt-participant-name">Sri Veronica</span>
+                              <span className="mt-participant-name">Priya &bull; PM</span>
                             </div>
                             <div className="mt-participant">
-                              <div className="mt-participant-thumb mt-participant-thumb--3" />
+                              <div className="mt-participant-thumb mt-participant-thumb--meet3">
+                                <img src="/crew/4.png" alt="Leo" className="mt-thumb-img" />
+                              </div>
                               <span className="mt-participant-mic">
-                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2.05v2.02A8 8 0 0120 12h2A10 10 0 0013 2.05z"/><path d="M13 6.1v2.06A4 4 0 0116 12h2a6 6 0 00-5-5.9z"/><circle cx="4" cy="20" r="2"/></svg>
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"/><path d="M19 11a7 7 0 01-14 0"/></svg>
                               </span>
-                              <span className="mt-participant-name">Cortyn Stefan</span>
+                              <span className="mt-participant-name">Leo &bull; Tech Lead</span>
                             </div>
                             <button className="mt-participant-more" aria-label="More participants">›</button>
                           </div>
@@ -497,7 +510,7 @@ export default function ProductShowcase() {
                           <div className="mt-info-row">
                             <div className="mt-info-card">
                               <div className="mt-info-card-title">Summary</div>
-                              <p className="mt-info-card-text">During the meeting, we covered some topics and reported that we achieved several targets set during the prev meeting. In today...</p>
+                              <p className="mt-info-card-text">Discussed Q2 sprint priorities. Auth module PR is ready. Payment integration pushed to Wednesday. Error monitoring added as new task.</p>
                               <button className="mt-info-edit" aria-label="Edit">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                               </button>
@@ -506,15 +519,15 @@ export default function ProductShowcase() {
                               <div className="mt-info-card-title">Tasks List</div>
                               <div className="mt-task">
                                 <span className="mt-task-check mt-task-check--done">✓</span>
-                                <span>Team Discussion</span>
+                                <span>Review Auth PR (Leo)</span>
                               </div>
                               <div className="mt-task">
                                 <span className="mt-task-check" />
-                                <span>Daily Work Review at 1:00 PM</span>
+                                <span>Payment integration (Max)</span>
                               </div>
                               <div className="mt-task">
                                 <span className="mt-task-check" />
-                                <span>Weekly Report Stand Up Me...</span>
+                                <span>Error monitoring setup (Leo)</span>
                               </div>
                               <button className="mt-info-edit" aria-label="Edit">
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 113 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -532,24 +545,24 @@ export default function ProductShowcase() {
                           <div className="mt-chat-messages">
                             <div className="mt-chat-bubble">
                               <div className="mt-chat-bubble-head">
-                                <span className="mt-chat-sender">Alicia Padlock</span>
-                                <span className="mt-chat-time">2:02 PM</span>
+                                <span className="mt-chat-sender">Ava (Scrum Master)</span>
+                                <span className="mt-chat-time">9:01 AM</span>
                               </div>
-                              <p className="mt-chat-text">How about our problem last week?</p>
+                              <p className="mt-chat-text">Max, what&apos;s the status on the auth module?</p>
                             </div>
                             <div className="mt-chat-bubble mt-chat-bubble--you">
                               <div className="mt-chat-bubble-head">
                                 <span className="mt-chat-sender">You</span>
-                                <span className="mt-chat-time">2:03 PM</span>
+                                <span className="mt-chat-time">9:03 AM</span>
                               </div>
-                              <p className="mt-chat-text">It&apos;s all clear, no worries 😊</p>
+                              <p className="mt-chat-text">Add error monitoring before we ship. Leo, assign that.</p>
                             </div>
                             <div className="mt-chat-bubble">
                               <div className="mt-chat-bubble-head">
-                                <span className="mt-chat-sender">Sri Veronica</span>
-                                <span className="mt-chat-time">2:10 PM</span>
+                                <span className="mt-chat-sender">Leo (Tech Lead)</span>
+                                <span className="mt-chat-time">9:04 AM</span>
                               </div>
-                              <p className="mt-chat-text">Yes, it&apos;s been solved. Since we have daily meeting to discuss everything 🙂</p>
+                              <p className="mt-chat-text">On it! I&apos;ll set up Sentry + Grafana dashboards by EOD. Tasks synced to your calendar 📅</p>
                             </div>
                           </div>
 
@@ -568,7 +581,7 @@ export default function ProductShowcase() {
                 </div>
 
                 <div className="cta-area">
-                  <a className="cta-btn" href="#">Sign up</a>
+                  <a className="cta-btn" href="#">Deploy AI Crew</a>
                 </div>
               </div>
             )}
